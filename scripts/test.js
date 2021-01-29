@@ -1,5 +1,5 @@
-username = 'sorensej@rose-hulman.edu'; // Needs "Guest" account for viewing
-pass = 'Flyingfox144';
+let username = ''; // Needs "Guest" account for viewing
+let pass = '';
 
 
 
@@ -42,7 +42,7 @@ var Request = require('tedious').Request;
 var Types = require('tedious').TYPES;
 
 function executeStatement() {
-    request = new Request("SELECT * FROM Item;", function (err) {
+    let request = new Request("SELECT * FROM Item;", function (err) {
         if (err) {
             console.log(err);
         }

@@ -1,15 +1,8 @@
 {
-  "name": "climbingclubtest",
-  "version": "1.0.0",
-  "description": "connecting to database and retrieving data",
-  "main": "test.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node test.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "tedious": "11.0.1"
-  }
+    "dependencies": {
+        "browserify": "^17.0.0",
+        "mssql": "6.3.1",
+        "requirejs": "^2.3.6",
+        "requirejs-browser": "2.1.9"
+    }
 }
