@@ -3,6 +3,7 @@
         "browserify": "^17.0.0",
         "mssql": "6.3.1",
         "requirejs": "^2.3.6",
-        "requirejs-browser": "2.1.9"
+        "requirejs-browser": "2.1.9",
+        "tedious": "^11.0.1"
     }
 }
