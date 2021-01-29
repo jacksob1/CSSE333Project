@@ -1,0 +1,15 @@
+{
+  "name": "climbingclubtest",
+  "version": "1.0.0",
+  "description": "connecting to database and retrieving data",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tedious": "11.0.1"
+  }
+}
