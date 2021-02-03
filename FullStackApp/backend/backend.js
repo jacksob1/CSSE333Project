@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var fs = require("fs");
+// var fs = require("fs");
 var cors = require("cors");
 app.use(cors());
 
@@ -144,8 +144,9 @@ app.get("/main", function(req, res) {
 });
 
 app.get("/db", function(req, res) {
-    username = ''; // Needs "Guest" account for viewing
-pass = '';
+    console.log("object");
+username = 'sorensej'; // Needs "Guest" account for viewing
+pass = '20004009';
 
 
 
@@ -206,7 +207,7 @@ function executeStatement() {
               arr.push(value);
             });
             data.push(arr);
-        });  
+        });
   
         request.on('doneInProc', function(rowCount, more) {
             console.log(rowCount + ' rows returned');
@@ -216,17 +217,19 @@ function executeStatement() {
             connection.close();
             let stringThing = "";
             let num = 1;
-            data.forEach(function(row) {
-                stringThing += "<ul>\n";
-                stringThing += "<ol>Row "+num+"</ol>\n";
-                row.forEach(function(col) {
-                    stringThing += "<ol>"+col+"</ol>\n";
-                });
-                stringThing += "</ul>\n";
-                stringThing += "<br>";
-                num++;
-            });
-            res.send(stringThing);
+            res.send(data);
+            // data.forEach(function(row) {
+            //     stringThing += "<ul>\n";
+            //     stringThing += "<ol>Row "+num+"</ol>\n";
+            //     row.forEach(function(col) {
+            //         stringThing += "<ol>"+col+"</ol>\n";
+            //     });
+            //     stringThing += "</ul>\n";
+            //     stringThing += "<br>";
+            //     num++;
+            //     //console.log(num);
+            // });
+           // res.send(stringThing);
         });
 
         connection.execSql(request);

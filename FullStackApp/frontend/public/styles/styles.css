@@ -1,0 +1,174 @@
+p {
+    color: black;
+}
+
+body {
+    background: #333333;
+}
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+}
+
+.navbar {
+    background-color: #555555;
+    color: white;
+    z-index: 100;
+}
+
+.page-container {
+    margin-top: 40px;
+}
+.topnav .search-container {
+    float: right;
+}
+
+.description{
+    margin: 10px;
+}
+
+#rentalsTitle {
+    position: sticky;
+    margin-top: 30px;
+    background: #212121;
+    text-align: center;
+    color: white;
+    font-size: 1.75em;
+    z-index: 99;
+    padding: 10px;
+    border-radius: 3px;
+    margin: auto;
+}
+
+.topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+
+.rental-listitem {
+    position: sticky;
+    background: white;
+    color: #212121;
+    padding: 10px;
+    z-index: 97;
+    box-shadow: 0px 0px 8px #888888;
+    font-size: 1.25em;
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+#rentalsContainer {
+    margin: auto;
+}
+
+#goToInventory {
+    position: sticky;
+    margin: auto;
+}
+
+.formatButton {
+    max-width: none;
+}
+
+/* Inventory Page */
+.inventory-listitem {
+    position: sticky;
+    background: white;
+    color: #212121;
+    height: fit-content;
+    padding: 10px;
+    z-index: 97;
+    box-shadow: 0px 0px 8px #888888;
+    font-size: 1.25em;
+    border-radius: 3px;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+/* Search Bar */
+
+/* Add a black background color to the top navigation bar */
+.topnav {
+    overflow: hidden;
+    background-color: #212121;
+    z-index: 96;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Style the "active" element to highlight the current page */
+.topnav a.active {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Style the search box inside the navigation bar */
+.topnav input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
+@media screen and (max-width: 600px) {
+
+    .topnav a,
+    .topnav input[type=text] {
+        float: none;
+        display: block;
+        text-align: left;
+        width: 100%;
+        margin: 0;
+        padding: 14px;
+    }
+
+    .topnav input[type=text] {
+        border: 1px solid #ccc;
+    }
+}
+
+#bg {
+    position: fixed;
+    left: -50%;
+    width: 200%;
+
+}
+
+#bg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    min-width: 50%;
+    filter: brightness(2);
+    filter: contrast(2);
+    image-rendering: pixelated;
+    filter: grayscale(100%);
+}

@@ -1,65 +1,54 @@
-const apiURL = "http://localhost:3000/api/";
+//const { response } = require("express");
+
+// const apiURL = "http://localhost:3000/db/";
 var selectedId = "";
-var editEntryMode = false;
-var counter = 0;
+
+
+
+//From https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim();
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
 
 function main() {
-    console.log("Ready");
-
-    document.querySelector("#decButton").onclick = () => {
-        counter -= 1;
-        updateView()
-    };
-
-    document.querySelector("#resetButton").onclick = () => {
-        counter = 0;
-        updateView()
-    };
-
-    document.querySelector("#incButton").onclick = () => {
-        counter += 1;
-        updateView()
-    };
-
-    document.querySelector("#createButton").onclick = () => {
-        createEntry();
-    };
-
-    document.querySelector("#updateButton").onclick = () => {
-        updateEntry();
-    };
-
-    document.querySelector("#deleteButton").onclick = () => {
-        deleteEntry();
-    };
+    console.log("IN MAIN\n");
 
     loadEntries(); //get data and populate entries
 }
 
 function updateView() {
-    document.querySelector("#counterText").innerHTML = `Count = ${counter}`;
 
-    if (editEntryMode) {
-        document.querySelector("#createButton").disabled = true;
-        document.querySelector("#updateButton").disabled = false;
-        document.querySelector("#deleteButton").disabled = false;
-    } else {
-        document.querySelector("#createButton").disabled = false;
-        document.querySelector("#updateButton").disabled = true;
-        document.querySelector("#deleteButton").disabled = true;
-    }
 }
 
 function loadEntries() {
-    document.querySelector("#displayEntries").innerHTML = "";
-    let allEntries = fetch(apiURL).then(
+    console.log("got here\n");
+    $("#rentalsContainer").innerHTML = "";
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    fetch("http://localhost:3000/db").then(
         response => response.json()
     ).then((data) => {
-        for (let i = 0; i < data.length; i++) {
-            document.querySelector("#displayEntries").innerHTML +=
-                `<button id="id${i}"onclick=loadEntry('${data[i]._id}');>Select Entry</button><label>${data[i].name}</label>&nbsp;<label>${data[i].count}</label><br>`
+        console.log("response??\n");
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInterior");
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            interiorCard.querySelector(".description").innerHTML = data[i][4];
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            newList.append(newCard);
         }
+        console.log("finished");
     });
+    //removes the old rentalsContainer and id
+    const oldList = document.querySelector("#rentalsContainer");
+    oldList.removeAttribute("id");
+    oldList.hidden = true;
+    oldList.parentElement.appendChild(newList);
 }
 
 function loadEntry(id) {
@@ -115,7 +104,10 @@ function deleteEntry() {
 
 function updateEntry() {
     let name = document.querySelector("#inputName").value;
-    let data = {"name": name, "count":counter};
+    let data = {
+        "name": name,
+        "count": counter
+    };
     fetch(apiURL + "id/" + selectedId, {
         method: "PUT",
         headers: {
