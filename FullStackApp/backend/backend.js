@@ -145,8 +145,8 @@ app.get("/main", function(req, res) {
 
 app.get("/db", function(req, res) {
     console.log("object");
-username = 'sorensej'; // Needs "Guest" account for viewing
-pass = '20004009';
+let username = 'club_gear_application_account'; // Needs "Guest" account for viewing
+let pass = 'csse333w2021';
 
 
 
@@ -191,7 +191,7 @@ var Types = require('tedious').TYPES;
 let data = [];
 
 function executeStatement() {
-    request = new Request("SELECT * FROM Item;", function(err) {  
+    let request = new Request("SELECT * FROM Item;", function(err) {  
         if (err) {  
             console.log(err);}  
         });  
