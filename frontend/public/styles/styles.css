@@ -12,11 +12,11 @@ html {
     width: 100%;
 }
 
-.navbar {
+/* .navbar {
     background-color: #555555;
     color: white;
     z-index: 100;
-}
+} */
 
 .page-container {
     margin-top: 40px;
@@ -36,29 +36,18 @@ html {
     text-align: center;
     color: white;
     font-size: 1.75em;
-    z-index: 99;
+    z-index: 90;
     padding: 10px;
     border-radius: 3px;
     margin: auto;
 }
-
-.topnav .search-container button {
-    float: right;
-    padding: 6px 10px;
-    margin-top: 8px;
-    margin-right: 16px;
-    background: #ddd;
-    font-size: 17px;
-    border: none;
-    cursor: pointer;
-  }
 
 .rental-listitem {
     position: sticky;
     background: white;
     color: #212121;
     padding: 10px;
-    z-index: 97;
+    z-index: 92;
     box-shadow: 0px 0px 8px #888888;
     font-size: 1.25em;
     border-radius: 3px;
@@ -93,13 +82,38 @@ html {
     padding: 20px;
 }
 
-/* Search Bar */
+/* Get the header to scroll correctly */
+/* Style the header */
+.header {
+    padding: 10px 16px;
+    background: #555;
+    color: #f1f1f1;
+  }
+  
+  /* Page content */
+  .content {
+    padding: 16px;
+  }
+  
+  /* The sticky class is added to the header with JS when it reaches its scroll position */
+  .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+  }
+  
+  /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+  .sticky + .content {
+    padding-top: 102px;
+  }
+
+/* Search Bar from https://www.w3schools.com/howto/howto_css_searchbar.asp */
 
 /* Add a black background color to the top navigation bar */
 .topnav {
     overflow: hidden;
     background-color: #212121;
-    z-index: 96;
+    z-index: 98;
 }
 
 /* Style the links inside the navigation bar */
@@ -134,6 +148,17 @@ html {
     margin-right: 16px;
     font-size: 17px;
 }
+
+.topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
