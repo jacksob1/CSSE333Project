@@ -1,5 +1,6 @@
 apiURL = "http://localhost:4000/search/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
+var signedIn = false;
 
 //From https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
 function htmlToElement(html) {
@@ -12,35 +13,68 @@ function htmlToElement(html) {
 function main() {
     console.log("IN MAIN\n");
 
+    if (signedIn) {
+        document.querySelector("#signin").innerHTML = "Sign Out";
+        document.querySelector("#signin").onclick = (event) => {
+            console.log("Sign out here");
+        }
+    } else {
+        document.querySelector("#signin").onclick = (event) => {
+            signIn();
+        }
+    }
+
+
     loadEntries(""); //get data and populate entries
 
     //if enter is pressed in the searchbar, send a request for the searchword
     $(".search-container").keyup(function (event) {
-        if (event.which === 13){
+        if (event.which === 13) {
             search();
         }
     });
-    
-   document.querySelector("#search-button").onclick =(event) => {
-       search();
-   }
+    //on search button press
+    document.querySelector("#search-button").onclick = (event) => {
+        search();
+    }
 }
 
-function search(){
+// simple search to get searchword and request the entries
+function search() {
     let searchword = document.querySelector("#search").value;
     console.log(searchword);
     loadEntries(searchword);
 }
 
-//needs to be done (probably)
-function updateView() {
+//sign in using rosefire
+function signIn() {
+    // Please note this needs to be the result of a user interaction
+    // (like a button click) otherwise it will get blocked as a popup
+    Rosefire.signIn("79ebc86f-8bf2-42fd-a13d-de48c533ff61", (err, rfUser) => {
+        if (err) {
+            console.log("Rosefire error!", err);
+            return;
+        }
+        console.log("Rosefire success!", rfUser);
+        document.querySelector("#signin").textContent="Sign Out";
+        document.querySelector("#signin").onclick = (event) => {
+            console.log("Sign out here");
+        }
+        signedIn = true;
+
+        // TODO: Use the rfUser.token with your server.
+    });
 }
+
+
+//needs to be done (probably)
+function updateView() {}
 
 
 function loadEntries(string) {
     console.log("got here\n");
     //if the search word is empty, use the default string
-    if (string == ""){
+    if (string == "") {
         string = defaultSearchword;
     }
     //empty the rentals container
@@ -48,7 +82,7 @@ function loadEntries(string) {
     //create a new replacement for the table
     const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
     //request the items with the URL and search word
-    fetch(apiURL+string).then(
+    fetch(apiURL + string).then(
         response => response.json()
     ).then((data) => {
         console.log("response??\n");
@@ -81,7 +115,9 @@ function loadEntries(string) {
 
 //Fix scrolling issues: https://www.w3schools.com/howto/howto_js_sticky_header.asp
 // When the user scrolls the page, execute myFunction
-window.onscroll = function() {scrollFct()};
+window.onscroll = function () {
+    scrollFct()
+};
 
 // Get the header
 var header = document.getElementById("navbar");
@@ -91,11 +127,11 @@ var sticky = header.offsetTop;
 
 // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
 function scrollFct() {
-  if (window.pageYOffset > sticky) {
-    header.classList.add("sticky");
-  } else {
-    header.classList.remove("sticky");
-  }
+    if (window.pageYOffset > sticky) {
+        header.classList.add("sticky");
+    } else {
+        header.classList.remove("sticky");
+    }
 }
 
 // we have not done this part yet
