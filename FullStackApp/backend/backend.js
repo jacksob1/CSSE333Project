@@ -139,81 +139,72 @@ app.get("/api/id/:id", function (req, res) {
 
 app.use('/static', express.static("public"));
 
-app.get("/main", function(req, res) {
+app.get("/main", function (req, res) {
     res.send("<h1>Goodbye!<h1>");
 });
 
-app.get("/db", function(req, res) {
+app.get("/db", function (req, res) {
     console.log("object");
-username = 'sorensej'; // Needs "Guest" account for viewing
-pass = '20004009';
-
-
-
-
-
-
-
-
-
-
-var Connection = require('tedious').Connection;  
-var config = {  
-    server: 'titan.csse.rose-hulman.edu',  //update me
-    authentication: {
-        type: 'default',
+    username = 'club_gear_application_account'; // Needs "Guest" account for viewing
+    pass = 'csse333w2021';
+    var Connection = require('tedious').Connection;
+    var config = {
+        server: 'titan.csse.rose-hulman.edu', //update me
+        authentication: {
+            type: 'default',
+            options: {
+                userName: `${username}`, //update me
+                password: `${pass}` //update me
+            }
+        },
         options: {
-            userName: `${username}`, //update me
-            password: `${pass}`  //update me
+            // If you are on Microsoft Azure, you need encryption:
+            encrypt: false,
+            database: 'ClubGearLocker_S1G5_jacksob1_buczkob1_sorensej' //update me
         }
-    },
-    options: {
-        // If you are on Microsoft Azure, you need encryption:
-        encrypt: false,
-        database: 'ClubGearLocker_S1G5_jacksob1_buczkob1_sorensej'  //update me
-    }
-};  
-var connection = new Connection(config);  
-connection.on('connect', function(err) {  
-    // If no error, then good to proceed.
-    if (err) {
-        console.log(err);
-        process.exit(1);
-    }
-    console.log("Connected");
-    executeStatement();
-    return;
-});
+    };
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+        executeStatement();
+        return;
+    });
 
-var Request = require('tedious').Request;
-var Types = require('tedious').TYPES;
+    var Request = require('tedious').Request;
+    var Types = require('tedious').TYPES;
 
-let data = [];
+    let data = [];
 
-function executeStatement() {
-    request = new Request("SELECT * FROM Item;", function(err) {  
-        if (err) {  
-            console.log(err);}  
-        });  
-        request.on('row', function(columns) {     
+    function executeStatement() {
+        request = new Request("SELECT * FROM Item;", function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+        request.on('row', function (columns) {
             let arr = [];
-            columns.forEach(function(column) {
+            columns.forEach(function (column) {
                 let value = "";
-              if (column.value === null) {  
-                value += 'NULL';  
-              } else {  
-                value += column.value + "";  
-              }
-              arr.push(value);
+                if (column.value === null) {
+                    value += 'NULL';
+                } else {
+                    value += column.value + "";
+                }
+                arr.push(value);
             });
             data.push(arr);
         });
-  
-        request.on('doneInProc', function(rowCount, more) {
-            console.log(rowCount + ' rows returned');
-        });  
 
-        request.on('requestCompleted', function() {
+        request.on('doneInProc', function (rowCount, more) {
+            console.log(rowCount + ' rows returned');
+        });
+
+        request.on('requestCompleted', function () {
             connection.close();
             let stringThing = "";
             let num = 1;
@@ -229,12 +220,103 @@ function executeStatement() {
             //     num++;
             //     //console.log(num);
             // });
-           // res.send(stringThing);
+            // res.send(stringThing);
         });
 
         connection.execSql(request);
-}
-connection.connect();
+    }
+    connection.connect();
+})
+
+
+app.get("/search/:search", function (req, res) {
+    let searchword = req.params.search;
+    if (searchword == "DEFAULT_SEARCH_PARAM"){
+        searchword = "";
+    }
+    console.log(searchword);
+    //searchword = "";
+    username = 'club_gear_application_account'; // Needs "Guest" account for viewing
+    pass = 'csse333w2021';
+    var Connection = require('tedious').Connection;
+    var config = {
+        server: 'titan.csse.rose-hulman.edu', //update me
+        authentication: {
+            type: 'default',
+            options: {
+                userName: `${username}`, //update me
+                password: `${pass}` //update me
+            }
+        },
+        options: {
+            // If you are on Microsoft Azure, you need encryption:
+            encrypt: false,
+            database: 'ClubGearLocker_S1G5_jacksob1_buczkob1_sorensej' //update me
+        }
+    };
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+        executeStatement2();
+        return;
+    });
+
+    var Request = require('tedious').Request;
+    var Types = require('tedious').TYPES;
+
+    let data = [];
+
+    function executeStatement2() {
+        request = new Request("SELECT * FROM Item WHERE Item.Name LIKE '%" + searchword + "%';", function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+        request.on('row', function (columns) {
+            let arr = [];
+            columns.forEach(function (column) {
+                let value = "";
+                if (column.value === null) {
+                    value += 'NULL';
+                } else {
+                    value += column.value + "";
+                }
+                arr.push(value);
+            });
+            data.push(arr);
+        });
+
+        request.on('doneInProc', function (rowCount, more) {
+            console.log(rowCount + ' rows returned');
+        });
+
+        request.on('requestCompleted', function () {
+            connection.close();
+            let stringThing = "";
+            let num = 1;
+            res.send(data);
+            // data.forEach(function(row) {
+            //     stringThing += "<ul>\n";
+            //     stringThing += "<ol>Row "+num+"</ol>\n";
+            //     row.forEach(function(col) {
+            //         stringThing += "<ol>"+col+"</ol>\n";
+            //     });
+            //     stringThing += "</ul>\n";
+            //     stringThing += "<br>";
+            //     num++;
+            //     //console.log(num);
+            // });
+            // res.send(stringThing);
+        });
+
+        connection.execSql(request);
+    }
+    connection.connect();
 })
 
 app.listen(3000);

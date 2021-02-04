@@ -1,7 +1,8 @@
 //const { response } = require("express");
 
-// const apiURL = "http://localhost:3000/db/";
+apiURL = "http://localhost:3000/search/";
 var selectedId = "";
+var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 
 
 
@@ -16,18 +17,34 @@ function htmlToElement(html) {
 function main() {
     console.log("IN MAIN\n");
 
-    loadEntries(); //get data and populate entries
+    loadEntries(""); //get data and populate entries
+
+    $(".search-container").keyup(function (event) {
+        // if ($(".search-container").is(':focus')&& event.which === 13) {​​
+        //     alert("hello");
+        // }​​
+        if (event.which === 13){
+            let searchword = document.querySelector("#search").value;
+            console.log(searchword);
+            loadEntries(searchword);
+        }
+    });
 }
+
+
 
 function updateView() {
 
 }
 
-function loadEntries() {
+function loadEntries(string) {
     console.log("got here\n");
+    if (string == ""){
+        string = defaultSearchword;
+    }
     $("#rentalsContainer").innerHTML = "";
     const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
-    fetch("http://localhost:3000/db").then(
+    fetch(apiURL+string).then(
         response => response.json()
     ).then((data) => {
         console.log("response??\n");
