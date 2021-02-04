@@ -17,11 +17,19 @@ function main() {
     //if enter is pressed in the searchbar, send a request for the searchword
     $(".search-container").keyup(function (event) {
         if (event.which === 13){
-            let searchword = document.querySelector("#search").value;
-            console.log(searchword);
-            loadEntries(searchword);
+            search();
         }
     });
+    
+   document.querySelector("#search-button").onclick =(event) => {
+       search();
+   }
+}
+
+function search(){
+    let searchword = document.querySelector("#search").value;
+    console.log(searchword);
+    loadEntries(searchword);
 }
 
 //needs to be done (probably)
