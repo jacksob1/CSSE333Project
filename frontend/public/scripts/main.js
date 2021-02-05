@@ -1,6 +1,11 @@
 apiURL = "http://localhost:4000/search/";
+apiURLRental = "http://localhost:4000/rentals/";
+apiURLRentalItems = "http://localhost:4000/rentalitems/";
+apiURLPermissions = "http://localhost:4000/permissions/";
+apiURLPending = "http://localhost:4000/pending/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var signedIn = false;
+var uid;
 
 //From https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
 function htmlToElement(html) {
@@ -13,6 +18,8 @@ function htmlToElement(html) {
 function main() {
     console.log("IN MAIN\n");
 
+    checkPermissions(3);
+
     if (signedIn) {
         document.querySelector("#signin").innerHTML = "Sign Out";
         document.querySelector("#signin").onclick = (event) => {
@@ -24,8 +31,18 @@ function main() {
         }
     }
 
+    document.querySelector("#inventory").onclick = (event) => {
+        document.querySelector("#rentalsTitle").innerHTML = "Items";
+        document.querySelector(".search-container").style.display = "initial";
+        loadEntries("");
+    }
 
-    loadEntries(""); //get data and populate entries
+    document.querySelector("#home").onclick = (event) => {
+        document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+        document.querySelector(".search-container").style.display = "none";
+        if (signedIn) loadRentals(4);
+        else signIn();
+    }
 
     //if enter is pressed in the searchbar, send a request for the searchword
     $(".search-container").keyup(function (event) {
@@ -37,6 +54,62 @@ function main() {
     document.querySelector("#search-button").onclick = (event) => {
         search();
     }
+}
+
+//check for executive permissions
+function checkPermissions(uid) {
+    fetch(apiURLPermissions + uid).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        document.querySelector("#execPendingRentals").style.display = "initial";
+        document.querySelector("#execPendingRentals").onclick = (params) => {
+            document.querySelector(".search-container").style.display = "none";
+            loadPending();
+        }
+        console.log("finished");
+    });
+}
+
+function loadPending() {
+    document.querySelector("#rentalsTitle").innerHTML = "Pending Rentals";
+    //empty the rentals container
+    $("#rentalsContainer").innerHTML = "";
+    //create a new replacement for the table
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    fetch(apiURLPending).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRental");
+            //put the item name in the newCard
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            (function(i){
+                var id = data[i][0];
+                interiorCard.querySelector(".detailsButton").onclick = (event) => {
+                    loadRentalItems(id);
+                };
+            })(i);
+            interiorCard.querySelector(".description").innerHTML = data[i][0]; //TODO: week 9 do this so click works and detail show
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        //removes the old rentalsContainer and id
+        const oldList = document.querySelector("#rentalsContainer");
+        oldList.removeAttribute("id");
+        //hide the old container and replace with the new list
+        oldList.hidden = true;
+        oldList.parentElement.appendChild(newList);
+        console.log("finished");
+    });
 }
 
 // simple search to get searchword and request the entries
@@ -56,11 +129,12 @@ function signIn() {
             return;
         }
         console.log("Rosefire success!", rfUser);
-        document.querySelector("#signin").textContent="Sign Out";
+        document.querySelector("#signin").textContent = "Sign Out";
         document.querySelector("#signin").onclick = (event) => {
             console.log("Sign out here");
         }
         signedIn = true;
+        uid = rfUser.token.username;
 
         // TODO: Use the rfUser.token with your server.
     });
@@ -70,6 +144,87 @@ function signIn() {
 //needs to be done (probably)
 function updateView() {}
 
+function loadRentals(parameter) {
+    document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+    //empty the rentals container
+    $("#rentalsContainer").innerHTML = "";
+    //create a new replacement for the table
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    //request the items with the URL and search word
+    fetch(apiURLRental + parameter).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        //loop through the data entering information to the card
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRental");
+            //put the item name in the newCard
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            (function(i){
+                var id = data[i][0];
+                interiorCard.querySelector(".detailsButton").onclick = (event) => {
+                    loadRentalItems(id);
+                };
+            })(i);
+            interiorCard.querySelector(".description").innerHTML = data[i][0]; //TODO: week 9 do this so click works and detail show
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        console.log("finished");
+    });
+    //removes the old rentalsContainer and id
+    const oldList = document.querySelector("#rentalsContainer");
+    oldList.removeAttribute("id");
+    //hide the old container and replace with the new list
+    oldList.hidden = true;
+    oldList.parentElement.appendChild(newList);
+}
+
+function loadRentalItems(id) {
+    document.querySelector("#rentalsTitle").innerHTML = "Rental Items";
+    //empty the rentals container
+    $("#rentalsContainer").innerHTML = "";
+    //create a new replacement for the table
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    //request the items with the URL and search word
+    fetch(apiURLRentalItems + id).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        //loop through the data entering information to the card
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRentalItems");
+            //put the item name in the newCard
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
+
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            interiorCard.querySelector(".description").innerHTML = data[i][4];
+            interiorCard.querySelector(".quantity").innerHTML = "Quantity: " + data[i][7];
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        console.log("finished");
+    });
+    //removes the old rentalsContainer and id
+    const oldList = document.querySelector("#rentalsContainer");
+    oldList.removeAttribute("id");
+    //hide the old container and replace with the new list
+    oldList.hidden = true;
+    oldList.parentElement.appendChild(newList);
+}
 
 function loadEntries(string) {
     console.log("got here\n");

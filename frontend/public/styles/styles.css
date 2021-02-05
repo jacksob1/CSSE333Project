@@ -18,11 +18,19 @@ html {
     z-index: 100;
 } */
 
+#execPendingRentals{
+    display: none;
+}
+
 .page-container {
     margin-top: 40px;
 }
 .topnav .search-container {
     float: right;
+}
+
+.search-container {
+    display: none;
 }
 
 .description{
