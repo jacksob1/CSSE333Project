@@ -220,10 +220,10 @@ html {
     right: 0;
     margin: auto;
     min-width: 50%;
-    filter: brightness(2);
-    filter: contrast(2);
+    /* filter: brightness(2);
+    filter: contrast(2); */
     image-rendering: pixelated;
-    filter: grayscale(100%);
+    filter: grayscale(50%);
 }
 
 #titleLogin{
@@ -232,6 +232,8 @@ html {
     font-size: 36pt;
     color: white;
     font-weight: bolder;
+    font-variant: small-caps;
+    text-shadow: #212121;
 }
 
 #rosefireButton{
