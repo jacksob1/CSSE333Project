@@ -7,7 +7,6 @@ apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
 apiURLAuth = "http://localhost:4000/auth/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
-var signedIn = false;
 var uid;
 
 //From https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
@@ -20,8 +19,10 @@ function htmlToElement(html) {
 
 function main() {
     console.log("IN MAIN\n");
+
+    //check to see if a token is available
     var token = localStorage.getItem("token");
-    console.log(token);
+    //verify the token with the backend
     if (token) {
         fetch(apiURLAuth, {
             method: "POST",
@@ -31,39 +32,54 @@ function main() {
         }).then(
             response => response.json()
         ).then((data) => {
+            //store valid token in local storage
             localStorage.setItem("token", token);
-            console.log("auth finished\n");
+            //store the username in a global variable
             uid = data.username;
+            //redirect to the homepage
             document.location = `body.html#home`;
+            //change signin button to a signout button
             document.querySelector("#signin").textContent = "Sign Out";
             document.querySelector("#signin").onclick = (event) => {
+                //remove token from storage
                 localStorage.removeItem("token");
+                //redirect to login page
                 document.location = `index.html`;
             }
+            //change title to current rentals
             document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
             document.querySelector(".search-container").style.display = "none";
-            loadRentals(rfUser.username);
-        }).catch(function () {
-            console.log("error");
+            loadRentals(uid);
         });
     } else {
+        //redirect to login page if not already there
         if (!document.querySelector("#loginPage")){
             document.location = `index.html`;
         }
+        //set up the rosefire signin button
         document.querySelector("#rosefireButton").onclick = (event) => {
             signIn();
         }
     }
-    checkPermissions(3);
+
+    // .catch(function () {
+    //     console.log("error");
+    // });
+    //see if the user has executive status
+    checkPermissions(uid);
+
+    //load items on inventory page
     document.querySelector("#inventory").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Items";
         document.querySelector(".search-container").style.display = "initial";
         loadEntries("");
     }
 
+    //load items on homepage
     document.querySelector("#home").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
         document.querySelector(".search-container").style.display = "none";
+        loadRentals(uid);
     }
 
     //if enter is pressed in the searchbar, send a request for the searchword
@@ -87,6 +103,7 @@ function checkPermissions(uid) {
         document.querySelector("#execPendingRentals").style.display = "initial";
         document.querySelector("#execPendingRentals").onclick = (params) => {
             document.querySelector(".search-container").style.display = "none";
+            //load pending rentals
             loadPending();
         }
         console.log("finished");
@@ -152,6 +169,7 @@ function signIn() {
         }
         console.log("Rosefire success!", rfUser);
 
+        //check token with backend
         fetch(apiURLAuth, {
             method: "POST",
             headers: {
@@ -160,26 +178,19 @@ function signIn() {
         }).then(
             response => response.json()
         ).then((data) => {
+            //store the token in local storage
             localStorage.setItem("token", rfUser.token);
             uid = rfUser.username;
+            //swithch to home page and change signin button to sign out
             document.location = `body.html#home`;
             document.querySelector("#signin").textContent = "Sign Out";
             document.querySelector("#signin").onclick = (event) => {
                 localStorage.removeItem("token");
                 document.location = `index.html`;
             }
-        }).catch(function () {
-            console.log("error");
         });
-
-
-        // TODO: Use the rfUser.token with your server.
     });
 }
-
-
-//needs to be done (probably)
-function updateView() {}
 
 function loadRentals(parameter) {
     document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
