@@ -205,3 +205,36 @@ html {
     image-rendering: pixelated;
     filter: grayscale(100%);
 }
+
+#bgLogin {
+    position: fixed;
+    top: -40%;
+    left: -50%;
+    width: 200%;
+}
+
+#bgLogin img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    min-width: 50%;
+    filter: brightness(2);
+    filter: contrast(2);
+    image-rendering: pixelated;
+    filter: grayscale(100%);
+}
+
+#titleLogin{
+    position: relative;
+    z-index: 99;
+    font-size: 36pt;
+    color: white;
+    font-weight: bolder;
+}
+
+#rosefireButton{
+    font-size: x-large;
+    color: white;
+}

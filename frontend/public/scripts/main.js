@@ -1,8 +1,11 @@
+//const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require("constants");
+
 apiURL = "http://localhost:4000/search/";
 apiURLRental = "http://localhost:4000/rentals/";
 apiURLRentalItems = "http://localhost:4000/rentalitems/";
 apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
+apiURLAuth = "http://localhost:4000/auth/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var signedIn = false;
 var uid;
@@ -17,20 +20,41 @@ function htmlToElement(html) {
 
 function main() {
     console.log("IN MAIN\n");
-
-    checkPermissions(3);
-
-    if (signedIn) {
-        document.querySelector("#signin").innerHTML = "Sign Out";
-        document.querySelector("#signin").onclick = (event) => {
-            console.log("Sign out here");
-        }
+    var token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+        fetch(apiURLAuth, {
+            method: "POST",
+            headers: {
+                ['authorization']: token
+            }
+        }).then(
+            response => response.json()
+        ).then((data) => {
+            localStorage.setItem("token", token);
+            console.log("auth finished\n");
+            uid = data.username;
+            document.location = `body.html#home`;
+            document.querySelector("#signin").textContent = "Sign Out";
+            document.querySelector("#signin").onclick = (event) => {
+                localStorage.removeItem("token");
+                document.location = `index.html`;
+            }
+            document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+            document.querySelector(".search-container").style.display = "none";
+            loadRentals(rfUser.username);
+        }).catch(function () {
+            console.log("error");
+        });
     } else {
-        document.querySelector("#signin").onclick = (event) => {
+        if (!document.querySelector("#loginPage")){
+            document.location = `index.html`;
+        }
+        document.querySelector("#rosefireButton").onclick = (event) => {
             signIn();
         }
     }
-
+    checkPermissions(3);
     document.querySelector("#inventory").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Items";
         document.querySelector(".search-container").style.display = "initial";
@@ -40,8 +64,6 @@ function main() {
     document.querySelector("#home").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
         document.querySelector(".search-container").style.display = "none";
-        if (signedIn) loadRentals(4);
-        else signIn();
     }
 
     //if enter is pressed in the searchbar, send a request for the searchword
@@ -90,7 +112,7 @@ function loadPending() {
             newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
-            (function(i){
+            (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
                     loadRentalItems(id);
@@ -129,12 +151,27 @@ function signIn() {
             return;
         }
         console.log("Rosefire success!", rfUser);
-        document.querySelector("#signin").textContent = "Sign Out";
-        document.querySelector("#signin").onclick = (event) => {
-            console.log("Sign out here");
-        }
-        signedIn = true;
-        uid = rfUser.token.username;
+
+        fetch(apiURLAuth, {
+            method: "POST",
+            headers: {
+                "authorization": rfUser.token
+            }
+        }).then(
+            response => response.json()
+        ).then((data) => {
+            localStorage.setItem("token", rfUser.token);
+            uid = rfUser.username;
+            document.location = `body.html#home`;
+            document.querySelector("#signin").textContent = "Sign Out";
+            document.querySelector("#signin").onclick = (event) => {
+                localStorage.removeItem("token");
+                document.location = `index.html`;
+            }
+        }).catch(function () {
+            console.log("error");
+        });
+
 
         // TODO: Use the rfUser.token with your server.
     });
@@ -165,7 +202,7 @@ function loadRentals(parameter) {
             newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
-            (function(i){
+            (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
                     loadRentalItems(id);

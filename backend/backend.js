@@ -19,7 +19,7 @@ app.get("/main", function (req, res) {
 });
 
 //rosefire post function
-app.post('/signin', function (req, res) {
+app.post('/auth', function (req, res) {
     var token = req.headers.authorization;
     if (!token) {
       res.status(401).json({
@@ -27,7 +27,7 @@ app.post('/signin', function (req, res) {
       });
       return;
     }
-    token = token.split(' ')[1]; 
+    console.log("in post  " + token);
     rosefire.verify(token, function(err, authData) {
       if (err) {
         res.status(401).json({
