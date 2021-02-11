@@ -104,7 +104,7 @@ app.get("/search/:search", function (req, res) {
         }
         console.log("Connected");
         //execute statement after the connection
-        executeStatement(res, connection, "SELECT * FROM Item WHERE Item.Name LIKE '%" + searchword + "%';");
+        executeStatement(res, connection, "EXEC [search_Item] @searchWord = '"+ searchword +"';");
         return;
     });
     connection.connect();
