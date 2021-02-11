@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <title>Rental Form</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
+  <link rel="stylesheet" href="styles/styles.css">
+
+
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+  <link href="styles/jquery.signature.css" rel="stylesheet">
+  <style>
+    body>iframe {
+      display: none;
+    }
+
+    .kbw-signature {
+      width: 50vw;
+      height: 200px;
+    }
+  </style>
+  <!--[if IE]>
+  <script src="js/excanvas.js"></script>
+  <![endif]-->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- <script src="scripts/jquery.min.js"></script> -->
+  <script src="scripts/jquery.signature.js"></script>
+
+  <script>
+    $(function () {
+      $('#sig').signature();
+      $('#clear').click(function () {
+        $('#sig').signature('clear');
+      });
+      $('#json').click(function () {
+        alert($('#sig').signature('toJSON'));
+      });
+      $('#svg').click(function () {
+        alert($('#sig').signature('toSVG'));
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <nav id="formNav" class="navbar navbar-dark fixed-top">
+    <a class="navbar-brand" href="\">Rental Form</a>
+  </nav>
+  <div id="formPage" class="container page-container justify-content-center">
+
+    <!-- doc title -->
+    <h1 class="text-center">Climbing Club Rental Agreement</h1>
+    <h5 class="text-center">Rose-Hulman Climbing Club</h5>
+    <h5 class="text-center formHeaderLine">Rose-Hulman Institute of Technology</h5>
+
+    <!-- user input header -->
+    <hr>
+    <div class="titleForm">Renter Information</div>
+    <hr>
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputName">Name</label>
+          <input type="name" class="form-control form2" id="inputName">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail">Email</label>
+          <input type="email" class="form-control form2" id="inputEmail">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputId">Student ID Number</label>
+          <input type="number" class="form-control form2" id="inputId">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPhone">Phone Number</label>
+          <input type="tel" class="form-control form2" id="inputPhone">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label for="inputAddress">Address</label>
+          <input type="text" class="form-control form2" id="inputAddress">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputCity">City</label>
+          <input type="text" class="form-control form2" id="inputCity">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputState">State</label>
+          <input type="text" class="form-control form2" id="inputState">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputZip">Zip</label>
+          <input type="text" class="form-control form2" id="inputZip">
+        </div>
+      </div>
+    </form>
+
+    <!-- gear information section -->
+    <hr>
+    <div class="titleForm">Gear</div>
+    <hr>
+    <form>
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="inputStart">Rental Start Date</label>
+          <input type="date" class="form-control form2" id="inputStart">
+        </div>
+        <div class="form-group col">
+          <label for="inputEnd">Rental End Date</label>
+          <input type="date" class="form-control form2" id="inputEnd">
+        </div>
+      </div>
+      <!-- <div class="row">
+        <ul class="itemList listTitle col-4">
+          <li class="list-group-item">Item</li>
+        </ul>
+        <ul class="quantityList listTitle col-2">
+          <li class="list-group-item">Quantity</li>
+        </ul>
+      </div> -->
+      <!-- <div class="row">
+        <ul id="itemList" class="itemList col-4">
+          list items
+        </ul>
+        <ul id="quantityList" class="quantityList col-2">
+          list quantities
+        </ul>
+      </div> -->
+    </form>
+
+    <!-- item template -->
+    <template id="itemTemplate">
+      <li class="list-group-item"></li>
+    </template>
+
+    <!-- quantity template -->
+    <template id="quantityTemplate">
+      <li class="list-group-item"></li>
+    </template>
+
+    <!-- rental agreement -->
+    <hr>
+    <div class="titleForm">Rental Agreement</div>
+    <hr>
+    <p>From the Constitution of the Rose-Hulman Climbing Club:</p>
+    <h5 class="text-center">Article VI</h5>
+    <h5 class="text-center">Loaning Equipment</h5>
+    <ol>
+      <li>Any individual may borrow equipment.</li>
+      <li>If the individual is a member of the student body then there will be no charge for equipment rental.</li>
+      <li>. If the student is not a member of the student body they must pay a nominal fee to the club in order
+        to borrow equipment. All rules applying to students borrowing gear will also apply to non-students.
+      </li>
+      <li>Equipment will be loaned on a first-come, first-served basis to active members and then to non-active
+        members, then to non-students.</li>
+      <li>Any borrower must agree to all conditions on the loan form.
+      </li>
+      <li>The borrower must demonstrate knowledge of how to safely use all equipment.</li>
+      <li>The borrower MUST report and agree in advance to replace any metal equipment dropped while
+        climbing.</li>
+      <li>Any loans may be denied with or without reason at the discretion of the gear manager.</li>
+      <li>All equipment must be inspected by the gear manager immediately prior to being loaned.</li>
+    </ol>
+    <p>I have read and understood the contents of this document. I voluntarily sign this Climbing Gear Rental
+      Agreement, and accept full responsibility for the equipment while it is checked out in my name. I acknowledge that
+      the gear manager has inspected all the equipment that I will be borrowing. If any gear is lost
+      or returned in a damaged state (as deemed by the gear manager), I agree to replace the lost or damaged
+      equipment in a manner judged by the gear manager.
+    </p>
+    <p>
+      In addition, I have demonstrated knowledge of the safe use of all equipment. By my signature below, I
+      agree to assume and/or incur all risks of loss, impairment, damage or injury of whatever kind, including
+      death, that my be sustained or suffered by the use of the equipment, whether or not the result in whole or
+      in part of acts or omissions, negligence or other unintentional fault of Rose-Hulman Institute of Technology
+      or the Rose-Hulman Climbing Club (and its officers and advisors). In addition, the I (including my heirs,
+      assigns and personal representatives) agree to release, hold harmless, and indemnify Rose-Hulman Institute
+      of Technology, the Rose-Hulman Climbing Club, and the officers of the Rose-Hulman Climbing Club from
+      and against any claims, demands, actions, causes of action, lawsuits, expenses, or losses (including attorneys’
+      fees) on account of property damage or personal injury (including death) arising out of or attributable to
+      the use of the equipment.</p>
+
+    <h5 class="text-center">Estimated Cost of Gear:</h5>
+    <h5 id="gearCost" class="text-center"></h5>
+
+    <!-- signature section -->
+    <div id="signBox">
+    <div id="sigBox">
+      <p>Signature:</p>
+      <div id="sig" class="kbw-signature"></div>
+      <button id="clear"class="btn btn-raised btn-primary btn-block">Clear</button>
+      <label for="inputSignDate">Date:</label>
+      <input type="date" class="form-control form2" id="inputSignDate">
+      <button onclick="document.location='/homepage.html'" type="button" id="submitForm"
+        class="btn btn-raised btn-primary btn-block">SUBMIT</button>
+    </div>
+  </div>
+  </div>
+</body>
+</div>
+</div>
+<script src="scripts/popper.js"></script>
+<script src="scripts/bootstrap-material-design.js"></script>
+<script>
+  $("body").bootstrapMaterialDesign();
+</script>
+
+</body>
+
+</html>
