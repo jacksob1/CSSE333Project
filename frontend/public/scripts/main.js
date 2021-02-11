@@ -114,18 +114,6 @@ function getCartID(uid){
     });
 }
 
-//find the id for the renter's cart
-function addItemToCard(uid, itemID){
-    console.log("uid is =" +uid);
-    fetch(apiURLCart + uid).then(
-        response => response.json()
-    ).then((data) => {
-        console.log("data = ", data);
-        let cartID= data[0][0];
-        
-    });
-}
-
 //check for executive permissions
 function checkPermissions(uid) {
     fetch(apiURLPermissions + uid).then(
@@ -336,15 +324,7 @@ function loadEntries(string) {
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
-<<<<<<< HEAD
-            //select the button to rent
-            let rentButton = document.querySelector("#rentButton");
-            rentButton.onclick = (event) => {
-                addItemToCart(data[i][0]);
-            }
-=======
 
->>>>>>> 12f1aee1720ba419291a8848e4ae0c1e7d311936
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
 
@@ -364,10 +344,6 @@ function loadEntries(string) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
-}
-
-function addItemToCart(id){
-
 }
 
 //Fix scrolling issues: https://www.w3schools.com/howto/howto_js_sticky_header.asp
