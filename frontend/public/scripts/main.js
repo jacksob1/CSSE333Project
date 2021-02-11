@@ -6,6 +6,7 @@ apiURLRentalItems = "http://localhost:4000/rentalitems/";
 apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
 apiURLAuth = "http://localhost:4000/auth/";
+apiURLCart = "http://localhost:4000/cart/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -53,7 +54,7 @@ function main() {
         });
     } else {
         //redirect to login page if not already there
-        if (!document.querySelector("#loginPage")){
+        if (!document.querySelector("#loginPage")) {
             document.location = `index.html`;
         }
         //set up the rosefire signin button
@@ -75,6 +76,11 @@ function main() {
         loadEntries("");
     }
 
+    //load items on cart page
+    document.querySelector("#cart").onclick = (event) => {
+        getCartID(4);
+    }
+
     //load items on homepage
     document.querySelector("#home").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
@@ -92,6 +98,18 @@ function main() {
     document.querySelector("#search-button").onclick = (event) => {
         search();
     }
+}
+
+//find the id for the renter's cart
+function getCartID(uid){
+    console.log("uid is =" +uid);
+    fetch(apiURLCart + uid).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("data = ", data);
+        loadRentalItems(data[0][0]);
+        document.querySelector("#rentalsTitle").innerHTML = "Cart";
+    });
 }
 
 //check for executive permissions
@@ -157,6 +175,8 @@ function search() {
     console.log(searchword);
     loadEntries(searchword);
 }
+
+
 
 //sign in using rosefire
 function signIn() {

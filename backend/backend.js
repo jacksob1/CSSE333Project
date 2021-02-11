@@ -135,6 +135,31 @@ app.get("/rentals/:uid", function (req, res) {
 })
 
 
+
+//find id of cart based on uid
+app.get("/cart/:uid", function (req, res) {
+    //retrieve the search word from the parameters
+    let renterID = req.params.uid;
+    console.log("renter ID is "+renterID);
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected in cart");
+        //execute statement after the connection
+        executeStatement(res, connection, "EXEC [cart_id] @RenterID = "+renterID+";");
+        return;
+    });
+    connection.connect();
+})
+
+
 //show pending rentals
 app.get("/pending", function (req, res) {
     //make connection and config
