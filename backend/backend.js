@@ -65,6 +65,46 @@ function makeConfig() {
     return config;
 }
 
+//check to see if a club member exists
+app.get("/clubmember/:uid", function (req, res) {
+    let renterID = req.params.uid;
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = "+renterID+";");
+        return;
+    });
+    connection.connect();
+})
+
+//create a new club member
+app.get("/clubmemberadd/:renterID&:name", function (req, res) {
+    let renterID = req.params.renterID;
+    let name = req.params.name;
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    console.log(renterID);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+        executeStatement(res, connection, "EXEC [create_ClubMember] @MemberID= "+renterID+", @Name = ["+name+"];");
+        return;
+    });
+    connection.connect();
+})
+
 //get all values from the items table
 app.get("/db", function (req, res) {
     var Connection = require('tedious').Connection;
@@ -134,7 +174,76 @@ app.get("/rentals/:uid", function (req, res) {
     connection.connect();
 })
 
+//add an item to the cart
+app.get("/cartadd/:rentalID&:itemID", function (req, res) {
+    //retrieve the search word from the parameters
+    var rentalID = req.params.rentalID;
+    var itemID = req.params.itemID;
+    console.log("rentalid: "+rentalID+" itemid: "+itemID);
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected in cart");
+        //execute statement after the connection
+        executeStatement(res, connection, `EXEC [create_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID};`);
+        return;
+    });
+    connection.connect();
+})
 
+
+//remove an item to the cart
+app.get("/cartremove/:rentalID&:itemID", function (req, res) {
+    //retrieve the search word from the parameters
+    var rentalID = req.params.rentalID;
+    var itemID = req.params.itemID;
+    console.log("rentalid: "+rentalID+" itemid: "+itemID);
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        //execute statement after the connection
+        executeStatement(res, connection, `EXEC [delete_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID};`);
+        return;
+    });
+    connection.connect();
+})
+
+
+//make a new cart if the user doesn not have one
+app.get("/makecart/:uid", function (req, res) {
+    //retrieve the search word from the parameters
+    let renterID = req.params.uid;
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected in cart");
+        //execute statement after the connection
+        executeStatement(res, connection, "EXEC [create_Rental] @RenterID = "+renterID+";");
+        return;
+    });
+    connection.connect();
+})
 
 //find id of cart based on uid
 app.get("/cart/:uid", function (req, res) {
@@ -153,7 +262,7 @@ app.get("/cart/:uid", function (req, res) {
         }
         console.log("Connected in cart");
         //execute statement after the connection
-        executeStatement(res, connection, "EXEC [cart_id] @RenterID = "+renterID+";");
+        executeStatement(res, connection, "EXEC [cart_id] @RenterID = '"+renterID+"';");
         return;
     });
     connection.connect();

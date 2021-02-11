@@ -7,6 +7,11 @@ apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
 apiURLAuth = "http://localhost:4000/auth/";
 apiURLCart = "http://localhost:4000/cart/";
+apiURLAddToCart = "http://localhost:4000/cartadd/";
+apiURLMakeCart = "http://localhost:4000/makecart/";
+apiURLClubMember = "http://localhost:4000/clubmember/";
+apiURLClubMemberAdd = "http://localhost:4000/clubmemberadd/";
+apiURLCartRemove = "http://localhost:4000/cartremove/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -37,6 +42,8 @@ function main() {
             localStorage.setItem("token", token);
             //store the username in a global variable
             uid = data.username;
+            let name = data.name;
+            createClubMember(uid, name);
             //redirect to the homepage
             document.location = `body.html#home`;
             //change signin button to a signout button
@@ -63,6 +70,27 @@ function main() {
         }
     }
 
+    function createClubMember(uid, name) {
+        fetch(apiURLClubMember + uid).then(
+            response => response.json()
+        ).then((data) => {
+            if (data.length == 0) {
+                console.log(
+                    "create new member" + uid +name
+                );
+                createNewMember(uid, name);
+            }
+            console.log("no new member");
+        });
+    }
+
+    function createNewMember(uid, name) {
+        fetch(apiURLClubMemberAdd + uid +"&"+name).then(
+            response => response.json()
+        ).then((data) => {
+            console.log("member added");
+        });
+    }
     // .catch(function () {
     //     console.log("error");
     // });
@@ -78,7 +106,7 @@ function main() {
 
     //load items on cart page
     document.querySelector("#cart").onclick = (event) => {
-        console.log("Start Cart with uid: "+ uid);
+        console.log("Start Cart with uid: " + uid);
         //Need to change SQL server to include renter's username
         getCartID(uid);
     }
@@ -103,8 +131,8 @@ function main() {
 }
 
 //find the id for the renter's cart
-function getCartID(uid){
-    console.log("uid is =" +uid);
+function getCartID(uid) {
+    console.log("uid is =" + uid);
     fetch(apiURLCart + uid).then(
         response => response.json()
     ).then((data) => {
@@ -276,7 +304,13 @@ function loadRentalItems(id) {
             let interiorTemplate = document.querySelector("#listItemInteriorRentalItems");
             //put the item name in the newCard
             newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
-
+            (function (i) {
+                var itemID = data[i][0];
+                var rentalID = id;
+                newCard.querySelector(".inventory-listitem").onclick = (event) => {
+                    removeItemFromRental(itemID, rentalID);
+                };
+            })(i);
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
@@ -294,6 +328,14 @@ function loadRentalItems(id) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
+}
+
+function removeItemFromRental(itemID, rentalID){
+    fetch(apiURLCartRemove + rentalID + "&"+itemID).then(
+        response => response.json()
+    ).then((data) => {
+        loadRentalItems(rentalID);
+    });
 }
 
 function loadEntries(string) {
@@ -328,10 +370,19 @@ function loadEntries(string) {
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
 
-            // NOT WORKING!!! Checks if the button has been clicked
-            newCard.querySelector(".rent").onClick = (event) => {
-                console.log("Needs to add item to Rental");
-            } 
+
+            (function (i) {
+                var id = data[i][0];
+                newCard.querySelector(".rent").onclick = (event) => {
+                    console.log("Needs to add item to Rental");
+                    addItemToRental(id);
+                };
+            })(i);
+            // // NOT WORKING!!! Checks if the button has been clicked
+            // newCard.querySelector(".rent").onclick = (event) => {
+            //     console.log("Needs to add item to Rental");
+            //     addItemToRental(data[i][0]);
+            // } 
 
             //add the card to the new list
             newList.append(newCard);
@@ -344,6 +395,39 @@ function loadEntries(string) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
+}
+
+function addItemToRental(itemID) {
+    console.log("uid is =" + uid);
+    fetch(apiURLCart + uid).then(
+        response => response.json()
+    ).then((data) => {
+        if (data.length == 0) {
+            makeCart(itemID, uid);
+        } else {
+            console.log("add item to rental "+data);
+            //addToCart(itemID, data[0][0]); //use this when username/id is fixed
+            addToCart(itemID, data);
+        }
+    });
+}
+
+function makeCart(itemID, uid) {
+    fetch(apiURLMakeCart + uid).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("make cart" +data);
+        addToCart(itemID, data.ID);
+    });
+}
+
+function addToCart(itemID, cartID) {
+    console.log("addtocart");
+    fetch(apiURLAddToCart + cartID + "&"+itemID).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("after add data = " + data);
+    });
 }
 
 //Fix scrolling issues: https://www.w3schools.com/howto/howto_js_sticky_header.asp
