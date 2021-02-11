@@ -78,7 +78,9 @@ function main() {
 
     //load items on cart page
     document.querySelector("#cart").onclick = (event) => {
-        getCartID(4);
+        console.log("Start Cart with uid: "+ uid);
+        //Need to change SQL server to include renter's username
+        getCartID(uid);
     }
 
     //load items on homepage
@@ -328,18 +330,29 @@ function loadEntries(string) {
             let template = document.querySelector("#cardTemplate");
             let newCard = template.content.cloneNode(true);
             let interiorTemplate = document.querySelector("#listItemInterior");
+
             //put the item name in the newCard
             newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
+<<<<<<< HEAD
             //select the button to rent
             let rentButton = document.querySelector("#rentButton");
             rentButton.onclick = (event) => {
                 addItemToCart(data[i][0]);
             }
+=======
+
+>>>>>>> 12f1aee1720ba419291a8848e4ae0c1e7d311936
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
+
+            // NOT WORKING!!! Checks if the button has been clicked
+            newCard.querySelector(".rent").onClick = (event) => {
+                console.log("Needs to add item to Rental");
+            } 
+
             //add the card to the new list
             newList.append(newCard);
         }
