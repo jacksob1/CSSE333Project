@@ -333,6 +333,33 @@ app.get("/permissions/:uid", function (req, res) {
     connection.connect();
 })
 
+app.get("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate&:cartID", function(req, res){
+    let name = req.params.name;
+    let address = req.params.address;
+    let city = req.params.city;
+    let state = req.params.state;
+    let zip = req.params.zip;
+    let sign = req.params.sign;
+    let startDate = req.params.startDate;
+    let endDate = req.params.endDate;
+    let cartID = req.params.cartID;
+
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function(err){
+        if(err){
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+
+        executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+" @newStartDate = '"+startDate+"' @newEndDate = '"+endDate+"' @newRenterSignature = "+sign+";");
+        return;
+    });
+    connection.connect();
+})
+
 
 //execute the the search statement and send a response using res and connection
 function executeStatement(res, connection, searchStatement) {

@@ -3,25 +3,12 @@
 var rhit = rhit || {};
 
 rhit.FB_KEY_NAME = "name";
-rhit.FB_KEY_EMAIL = "email";
-rhit.FB_KEY_ID_NUM = "idNum";
 rhit.FB_KEY_ZIP = "zip";
 rhit.FB_KEY_STATE = "state";
 rhit.FB_KEY_ADDRESS = "address";
-rhit.FB_KEY_ITEMS = "items";
-rhit.FB_KEY_QUANTITIES = "itemQuantities";
-rhit.FB_QUANTITIES = "quantities";
 rhit.FB_KEY_SIGNATURE = "signature";
-rhit.FB_KEY_PHONE = "phone";
-rhit.FB_KEY_PRICE = "price";
-rhit.FB_KEY_CART = "cart";
 rhit.FB_START = "startDate";
 rhit.FB_END= "endDate";
-rhit.FB_RENTER = "user";
-rhit.FB_FORM_ID = "formId";
-rhit.FB_STATUS = "status";
-rhit.FB_STATUS_REQUEST = "request";
-rhit.FB_SIGN_DATE = "signDate";
 rhit.FB_CITY = "city";
 
 apiURL = "http://localhost:4000/search/";
@@ -36,6 +23,7 @@ apiURLMakeCart = "http://localhost:4000/makecart/";
 apiURLClubMember = "http://localhost:4000/clubmember/";
 apiURLClubMemberAdd = "http://localhost:4000/clubmemberadd/";
 apiURLCartRemove = "http://localhost:4000/cartremove/";
+apiURLSubmitForm = "http://localhost:4000/submitForm/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -69,7 +57,7 @@ function main() {
             let name = data.name;
             createClubMember(uid, name);
             //redirect to the homepage
-            document.location = `body.html#home`;
+            //document.location = `body.html#home`;
             //change signin button to a signout button
             document.querySelector("#signin").textContent = "Sign Out";
             document.querySelector("#signin").onclick = (event) => {
@@ -187,7 +175,8 @@ function storeData(){
     let endDate = document.querySelector("#inputEnd").value;
     let city = document.querySelector("#inputCity").value;
     let form = new rhit.Form(name, email, phone, idNum, zip, state, city, address, items, quantities, signature, signDate, price, startDate, endDate);
-    addFormDataToDatabase(form);
+    console.log(form);
+    getOldCartID(form, uid);
 }
 
 // {
@@ -208,11 +197,20 @@ function storeData(){
 //     [rhit.FB_CITY]: form.city
 // }
 
-function addFormDataToDatabase(form){
+function addFormDataToDatabase(form, cartID){
+    fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("Updated Rental!");
+    });
+}
+
+function getOldCartID(form, uid) {
+    console.log("uid is =" + uid);
     fetch(apiURLCart + uid).then(
         response => response.json()
     ).then((data) => {
-
+        addFormDataToDatabase(form, data[0][0]);
     });
 }
 
