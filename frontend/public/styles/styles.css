@@ -192,6 +192,75 @@ html {
     display: none;
 }
 
+/* Background image stuff */
+
+#loginPage{
+    padding: 70px 20px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#rosefireButton{
+    border-color: white;
+    border-style: solid;
+    background-color: cadetblue;
+}
+
+#bg {
+    position: fixed;
+    left: -50%;
+    width: 200%;
+
+}
+
+#bg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    min-width: 50%;
+    filter: brightness(2);
+    filter: contrast(2);
+    image-rendering: pixelated;
+    filter: grayscale(100%);
+}
+
+#bgLogin {
+    position: fixed;
+    top: -40%;
+    left: -50%;
+    width: 200%;
+}
+
+#bgLogin img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    min-width: 50%;
+    /* filter: brightness(2);
+    filter: contrast(2); */
+    image-rendering: pixelated;
+    filter: grayscale(50%);
+}
+
+#titleLogin{
+    position: relative;
+    z-index: 99;
+    font-size: 36pt;
+    color: white;
+    font-weight: bolder;
+    font-variant: small-caps;
+    text-shadow: #212121;
+}
+
+#rosefireButton{
+    font-size: x-large;
+    color: white;
+}
+
 /* Get the header to scroll correctly */
 /* Style the header */
 .header {
@@ -286,59 +355,4 @@ html {
     .topnav input[type=text] {
         border: 1px solid #ccc;
     }
-}
-
-#bg {
-    position: fixed;
-    left: -50%;
-    width: 200%;
-
-}
-
-#bg img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    min-width: 50%;
-    filter: brightness(2);
-    filter: contrast(2);
-    image-rendering: pixelated;
-    filter: grayscale(100%);
-}
-
-#bgLogin {
-    position: fixed;
-    top: -40%;
-    left: -50%;
-    width: 200%;
-}
-
-#bgLogin img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    min-width: 50%;
-    /* filter: brightness(2);
-    filter: contrast(2); */
-    image-rendering: pixelated;
-    filter: grayscale(50%);
-}
-
-#titleLogin{
-    position: relative;
-    z-index: 99;
-    font-size: 36pt;
-    color: white;
-    font-weight: bolder;
-    font-variant: small-caps;
-    text-shadow: #212121;
-}
-
-#rosefireButton{
-    font-size: x-large;
-    color: white;
 }
