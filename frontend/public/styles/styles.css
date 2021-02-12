@@ -75,6 +75,11 @@ html {
     max-width: none;
 }
 
+#mInventoryPage{
+    text-align: center;
+}
+
+
 /* Form Page */
 #formReviewPage, #formPage, #detailPageCurrent,#detailPageRequest{
     background-color:white;
@@ -181,6 +186,10 @@ html {
     border-radius: 3px;
     margin-top: 10px;
     padding: 20px;
+}
+
+#checkOutButton{
+    display: none;
 }
 
 /* Get the header to scroll correctly */

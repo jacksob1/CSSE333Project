@@ -1,5 +1,29 @@
 //const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require("constants");
 
+var rhit = rhit || {};
+
+rhit.FB_KEY_NAME = "name";
+rhit.FB_KEY_EMAIL = "email";
+rhit.FB_KEY_ID_NUM = "idNum";
+rhit.FB_KEY_ZIP = "zip";
+rhit.FB_KEY_STATE = "state";
+rhit.FB_KEY_ADDRESS = "address";
+rhit.FB_KEY_ITEMS = "items";
+rhit.FB_KEY_QUANTITIES = "itemQuantities";
+rhit.FB_QUANTITIES = "quantities";
+rhit.FB_KEY_SIGNATURE = "signature";
+rhit.FB_KEY_PHONE = "phone";
+rhit.FB_KEY_PRICE = "price";
+rhit.FB_KEY_CART = "cart";
+rhit.FB_START = "startDate";
+rhit.FB_END= "endDate";
+rhit.FB_RENTER = "user";
+rhit.FB_FORM_ID = "formId";
+rhit.FB_STATUS = "status";
+rhit.FB_STATUS_REQUEST = "request";
+rhit.FB_SIGN_DATE = "signDate";
+rhit.FB_CITY = "city";
+
 apiURL = "http://localhost:4000/search/";
 apiURLRental = "http://localhost:4000/rentals/";
 apiURLRentalItems = "http://localhost:4000/rentalitems/";
@@ -101,12 +125,18 @@ function main() {
     document.querySelector("#inventory").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Items";
         document.querySelector(".search-container").style.display = "initial";
+        document.querySelector("#checkOutButton").style.display = "none";
         loadEntries("");
     }
 
     //load items on cart page
     document.querySelector("#cart").onclick = (event) => {
         console.log("Start Cart with uid: " + uid);
+        document.querySelector(".search-container").style.display = "none";
+        document.querySelector("#checkOutButton").style.display = "initial";
+        document.querySelector("#checkOutButton").onclick = (event) => {
+            checkOut();
+        }
         //Need to change SQL server to include renter's username
         getCartID(uid);
     }
@@ -115,6 +145,7 @@ function main() {
     document.querySelector("#home").onclick = (event) => {
         document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
         document.querySelector(".search-container").style.display = "none";
+        document.querySelector("#checkOutButton").style.display = "none";
         loadRentals(uid);
     }
 
@@ -127,6 +158,81 @@ function main() {
     //on search button press
     document.querySelector("#search-button").onclick = (event) => {
         search();
+    }
+}
+
+//checks out cart
+function checkOut(){
+    document.location = `formpage.html`;
+    console.log("here");
+    document.querySelector("#submitForm").onclick = (params) => {
+        storeData();
+    }
+}
+
+function storeData(){
+    let name = document.querySelector("#inputName").value;
+    let email = document.querySelector("#inputEmail").value;
+    let phone = document.querySelector("#inputPhone").value;
+    let idNum = document.querySelector("#inputId").value;
+    let zip = document.querySelector("#inputZip").value;
+    let state = document.querySelector("#inputState").value;
+    let address = document.querySelector("#inputAddress").value;
+    let items = rhit.fbCartManager.items;
+    let signature = $('#sig').signature('toSVG');
+    let price = document.querySelector("#gearCost").innerHTML;
+    let quantities = rhit.fbCartManager.quantities;
+    let signDate = document.querySelector("#inputSignDate").value;
+    let startDate = document.querySelector("#inputStart").value;
+    let endDate = document.querySelector("#inputEnd").value;
+    let city = document.querySelector("#inputCity").value;
+    let form = new rhit.Form(name, email, phone, idNum, zip, state, city, address, items, quantities, signature, signDate, price, startDate, endDate);
+    addFormDataToDatabase(form);
+}
+
+// {
+//     [rhit.FB_KEY_NAME] : form.name,
+//     [rhit.FB_KEY_EMAIL] : form.email,
+//     [rhit.FB_KEY_PHONE]: form.phone,
+//     [rhit.FB_KEY_ID_NUM] : form.idNum,
+//     [rhit.FB_KEY_ZIP] : form.zip,
+//     [rhit.FB_KEY_STATE] : form.state,
+//     [rhit.FB_KEY_ADDRESS] : form.address,
+//     [rhit.FB_KEY_ITEMS] : form.items,
+//     [rhit.FB_KEY_QUANTITIES] : form.quantities,
+//     [rhit.FB_KEY_SIGNATURE] : form.signature,
+//     [rhit.FB_KEY_PRICE] : form.price,
+//     [rhit.FB_SIGN_DATE]: form.signDate,
+//     [rhit.FB_START]: form.startDate,
+//     [rhit.FB_END]: form.endDate,
+//     [rhit.FB_CITY]: form.city
+// }
+
+function addFormDataToDatabase(form){
+    fetch(apiURLCart + uid).then(
+        response => response.json()
+    ).then((data) => {
+
+    });
+}
+
+rhit.Form = class {
+    constructor(name, email, phone, idNum, zip, state, city, address, items, quantities, signature, signDate, price, startDate, endDate) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.idNum = idNum;
+        this.zip = zip;
+        this.state = state;
+        this.address = address;
+        this.items = items;
+        this.signature = signature;
+        this.price = price;
+        this.quantities = quantities;
+        this.signDate = signDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.city =city;
     }
 }
 
@@ -450,79 +556,5 @@ function scrollFct() {
         header.classList.remove("sticky");
     }
 }
-
-// we have not done this part yet
-// function loadEntry(id) {
-//     selectedId = id;
-//     let entry = fetch(apiURL + "id/" + id).then(
-//         response => response.json()).then(data => {
-//         document.querySelector("#inputName").value = data.name;
-//         counter = data.count;
-//         editEntryMode = true;
-//         updateView();
-//     });
-// }
-
-// function createEntry() {
-//     let name = document.querySelector("#inputName").value;
-//     let data = {
-//         "name": name,
-//         "count": counter
-//     };
-
-//     let entry = fetch(apiURL, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": 'application/json'
-//         },
-//         body: JSON.stringify(data)
-//     }).then((data) => {
-//         editEntryMode = false;
-//         document.querySelector("#inputName").value = "";
-//         counter = 0;
-//         updateView();
-//         loadEntries();
-//     }).catch((err) => {
-//         console.log(err);
-//     });
-// }
-
-// function deleteEntry() {
-//     fetch(apiURL + "id/" + selectedId, {
-//         method: "DELETE"
-//     }).then(data => {
-//         editEntryMode = false;
-//         document.querySelector("#inputName").value = "";
-//         counter = 0;
-//         updateView();
-//         loadEntries();
-//     }).catch((err) => {
-//         console.log(err);
-//     });
-// }
-
-
-// function updateEntry() {
-//     let name = document.querySelector("#inputName").value;
-//     let data = {
-//         "name": name,
-//         "count": counter
-//     };
-//     fetch(apiURL + "id/" + selectedId, {
-//         method: "PUT",
-//         headers: {
-//             "Content-Type": 'application/json'
-//         },
-//         body: JSON.stringify(data)
-//     }).then(data => {
-//         editEntryMode = false;
-//         document.querySelector("#inputName").value = "";
-//         counter = 0;
-//         updateView();
-//         loadEntries();
-//     }).catch((err) => {
-//         console.log(err);
-//     });
-// }
 
 main();
