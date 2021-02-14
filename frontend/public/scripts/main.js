@@ -8,7 +8,7 @@ rhit.FB_KEY_STATE = "state";
 rhit.FB_KEY_ADDRESS = "address";
 rhit.FB_KEY_SIGNATURE = "signature";
 rhit.FB_START = "startDate";
-rhit.FB_END= "endDate";
+rhit.FB_END = "endDate";
 rhit.FB_CITY = "city";
 
 apiURL = "http://localhost:4000/search/";
@@ -59,17 +59,19 @@ function main() {
             //redirect to the homepage
             //document.location = `body.html#home`;
             //change signin button to a signout button
-            document.querySelector("#signin").textContent = "Sign Out";
-            document.querySelector("#signin").onclick = (event) => {
-                //remove token from storage
-                localStorage.removeItem("token");
-                //redirect to login page
-                document.location = `index.html`;
+            if (document.querySelector("#signin")) {
+                document.querySelector("#signin").textContent = "Sign Out";
+                document.querySelector("#signin").onclick = (event) => {
+                    //remove token from storage
+                    localStorage.removeItem("token");
+                    //redirect to login page
+                    document.location = `index.html`;
+                }
+                //change title to current rentals
+                document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+                document.querySelector(".search-container").style.display = "none";
+                loadRentals(uid);
             }
-            //change title to current rentals
-            document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
-            document.querySelector(".search-container").style.display = "none";
-            loadRentals(uid);
         });
     } else {
         //redirect to login page if not already there
@@ -88,7 +90,7 @@ function main() {
         ).then((data) => {
             if (data.length == 0) {
                 console.log(
-                    "create new member" + uid +name
+                    "create new member" + uid + name
                 );
                 createNewMember(uid, name);
             }
@@ -97,7 +99,7 @@ function main() {
     }
 
     function createNewMember(uid, name) {
-        fetch(apiURLClubMemberAdd + uid +"&"+name).then(
+        fetch(apiURLClubMemberAdd + uid + "&" + name).then(
             response => response.json()
         ).then((data) => {
             console.log("member added");
@@ -107,50 +109,71 @@ function main() {
     //     console.log("error");
     // });
     //see if the user has executive status
-    checkPermissions(uid);
+    if (!document.querySelector("#loginNav")) {
+        checkPermissions(uid);
+    }
 
     //load items on inventory page
-    document.querySelector("#inventory").onclick = (event) => {
-        document.querySelector("#rentalsTitle").innerHTML = "Items";
-        document.querySelector(".search-container").style.display = "initial";
-        document.querySelector("#checkOutButton").style.display = "none";
-        loadEntries("");
+    if (document.querySelector("#inventory")) {
+        document.querySelector("#inventory").onclick = (event) => {
+            document.querySelector("#rentalsTitle").innerHTML = "Items";
+            document.querySelector(".search-container").style.display = "initial";
+            document.querySelector("#checkOutButton").style.display = "none";
+            loadEntries("", false);
+        }
     }
 
     //load items on cart page
-    document.querySelector("#cart").onclick = (event) => {
-        console.log("Start Cart with uid: " + uid);
-        document.querySelector(".search-container").style.display = "none";
-        document.querySelector("#checkOutButton").style.display = "initial";
-        document.querySelector("#checkOutButton").onclick = (event) => {
-            checkOut();
+    if (document.querySelector("#cart")) {
+        document.querySelector("#cart").onclick = (event) => {
+            console.log("Start Cart with uid: " + uid);
+            document.querySelector(".search-container").style.display = "none";
+            document.querySelector("#checkOutButton").style.display = "initial";
+            document.querySelector("#checkOutButton").onclick = (event) => {
+                checkOut();
+            }
+            //Need to change SQL server to include renter's username
+            getCartID(uid);
         }
-        //Need to change SQL server to include renter's username
-        getCartID(uid);
     }
 
     //load items on homepage
-    document.querySelector("#home").onclick = (event) => {
-        document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
-        document.querySelector(".search-container").style.display = "none";
-        document.querySelector("#checkOutButton").style.display = "none";
-        loadRentals(uid);
+    if (document.querySelector("#home")) {
+        document.querySelector("#home").onclick = (event) => {
+            document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+            document.querySelector(".search-container").style.display = "none";
+            document.querySelector("#checkOutButton").style.display = "none";
+            loadRentals(uid);
+        }
     }
+    if (document.querySelector("#execInventory")){
+        document.querySelector("#execInventory").onclick = (event) => {
+            document.querySelector("#rentalsTitle").innerHTML = "Items";
+            document.querySelector(".search-container").style.display = "initial";
+            loadEntries("", true);
+        }
+    }
+    let isManagement = false;
 
     //if enter is pressed in the searchbar, send a request for the searchword
-    $(".search-container").keyup(function (event) {
-        if (event.which === 13) {
-            search();
+    if (document.querySelector("#execInventory")) {
+        isManagement = true;
+    }
+    if (document.querySelector("#search-button")) {
+        $(".search-container").keyup(function (event) {
+            if (event.which === 13) {
+                search(isManagement);
+            }
+        });
+        //on search button press
+        document.querySelector("#search-button").onclick = (event) => {
+            search(isManagement);
         }
-    });
-    //on search button press
-    document.querySelector("#search-button").onclick = (event) => {
-        search();
     }
 }
 
 //checks out cart
-function checkOut(){
+function checkOut() {
     document.location = `formpage.html`;
     console.log("here");
     document.querySelector("#submitForm").onclick = (params) => {
@@ -158,7 +181,7 @@ function checkOut(){
     }
 }
 
-function storeData(){
+function storeData() {
     let name = document.querySelector("#inputName").value;
     let email = document.querySelector("#inputEmail").value;
     let phone = document.querySelector("#inputPhone").value;
@@ -197,7 +220,7 @@ function storeData(){
 //     [rhit.FB_CITY]: form.city
 // }
 
-function addFormDataToDatabase(form, cartID){
+function addFormDataToDatabase(form, cartID) {
     fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`).then(
         response => response.json()
     ).then((data) => {
@@ -230,7 +253,7 @@ rhit.Form = class {
         this.signDate = signDate;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.city =city;
+        this.city = city;
     }
 }
 
@@ -252,13 +275,16 @@ function checkPermissions(uid) {
         response => response.json()
     ).then((data) => {
         console.log(data);
-        document.querySelector("#execPendingRentals").style.display = "initial";
-        document.querySelector("#execPendingRentals").onclick = (params) => {
-            document.querySelector(".search-container").style.display = "none";
-            //load pending rentals
-            loadPending();
+        if (document.querySelector("#execPendingRentals")) {
+            document.querySelector("#checkOutButton").style.display = "none";
+            document.querySelector("#execPendingRentals").style.display = "initial";
+            document.querySelector("#execPendingRentals").onclick = (params) => {
+                document.querySelector(".search-container").style.display = "none";
+                //load pending rentals
+                loadPending();
+            }
+            console.log("finished");
         }
-        console.log("finished");
     });
 }
 
@@ -304,10 +330,10 @@ function loadPending() {
 }
 
 // simple search to get searchword and request the entries
-function search() {
+function search(isManagement) {
     let searchword = document.querySelector("#search").value;
     console.log(searchword);
-    loadEntries(searchword);
+    loadEntries(searchword, isManagement);
 }
 
 
@@ -434,15 +460,15 @@ function loadRentalItems(id) {
     oldList.parentElement.appendChild(newList);
 }
 
-function removeItemFromRental(itemID, rentalID){
-    fetch(apiURLCartRemove + rentalID + "&"+itemID).then(
+function removeItemFromRental(itemID, rentalID) {
+    fetch(apiURLCartRemove + rentalID + "&" + itemID).then(
         response => response.json()
     ).then((data) => {
         loadRentalItems(rentalID);
     });
 }
 
-function loadEntries(string) {
+function loadEntries(string, isManagement) {
     console.log("got here\n");
     //if the search word is empty, use the default string
     if (string == "") {
@@ -474,13 +500,24 @@ function loadEntries(string) {
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
 
-
             (function (i) {
                 var id = data[i][0];
-                newCard.querySelector(".rent").onclick = (event) => {
-                    console.log("Needs to add item to Rental");
-                    addItemToRental(id);
-                };
+                let editButton = newCard.querySelector(".detail").innerHTML = "EDIT";
+                let deleteButton = newCard.querySelector(".rent").innerHTML = "DELETE";
+                if (isManagement) {
+
+                    editButton.onclick = (event) => {
+                        //updateitem
+                    }
+                    deleteButton.onclick = (event) => {
+                        //deleteitem
+                    }
+                } else {
+                    newCard.querySelector(".rent").onclick = (event) => {
+                        console.log("Needs to add item to Rental");
+                        addItemToRental(id);
+                    }
+                }
             })(i);
             // // NOT WORKING!!! Checks if the button has been clicked
             // newCard.querySelector(".rent").onclick = (event) => {
@@ -509,7 +546,7 @@ function addItemToRental(itemID) {
         if (data.length == 0) {
             makeCart(itemID, uid);
         } else {
-            console.log("add item to rental "+data);
+            console.log("add item to rental " + data);
             //addToCart(itemID, data[0][0]); //use this when username/id is fixed
             addToCart(itemID, data);
         }
@@ -520,14 +557,14 @@ function makeCart(itemID, uid) {
     fetch(apiURLMakeCart + uid).then(
         response => response.json()
     ).then((data) => {
-        console.log("make cart" +data);
+        console.log("make cart" + data);
         addToCart(itemID, data.ID);
     });
 }
 
 function addToCart(itemID, cartID) {
     console.log("addtocart");
-    fetch(apiURLAddToCart + cartID + "&"+itemID).then(
+    fetch(apiURLAddToCart + cartID + "&" + itemID).then(
         response => response.json()
     ).then((data) => {
         console.log("after add data = " + data);
@@ -537,17 +574,27 @@ function addToCart(itemID, cartID) {
 //Fix scrolling issues: https://www.w3schools.com/howto/howto_js_sticky_header.asp
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () {
-    scrollFct()
+    var header = document.querySelector(".navbar");
+    if (header) {
+        var sticky = header.offsetTop;
+        scrollFct(sticky, header);
+    } else {
+        var header = document.querySelector("#navbar");
+        if (header) {
+            var sticky = header.offsetTop;
+            scrollFct(sticky, header);
+        }
+    }
+
 };
 
 // Get the header
-var header = document.getElementById("navbar");
 
 // Get the offset position of the navbar
-var sticky = header.offsetTop;
+
 
 // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
-function scrollFct() {
+function scrollFct(sticky, header) {
     if (window.pageYOffset > sticky) {
         header.classList.add("sticky");
     } else {

@@ -180,12 +180,17 @@ html {
     color: #212121;
     height: fit-content;
     padding: 10px;
+    justify-content: left;
     z-index: 97;
     box-shadow: 0px 0px 8px #888888;
     font-size: 1.25em;
     border-radius: 3px;
     margin-top: 10px;
     padding: 20px;
+}
+
+.description{
+    text-align: left;
 }
 
 #checkOutButton{
