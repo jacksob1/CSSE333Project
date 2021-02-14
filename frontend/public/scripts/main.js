@@ -42,6 +42,7 @@ function main() {
     var token = localStorage.getItem("token");
     //verify the token with the backend
     if (token) {
+        console.log("here");
         fetch(apiURLAuth, {
             method: "POST",
             headers: {
@@ -70,6 +71,7 @@ function main() {
                 //change title to current rentals
                 document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
                 document.querySelector(".search-container").style.display = "none";
+                checkPermissions(uid);
                 loadRentals(uid);
             }
         });
@@ -93,8 +95,9 @@ function main() {
                     "create new member" + uid + name
                 );
                 createNewMember(uid, name);
+            } else {
+                console.log("no new member");
             }
-            console.log("no new member");
         });
     }
 
@@ -109,8 +112,9 @@ function main() {
     //     console.log("error");
     // });
     //see if the user has executive status
-    if (!document.querySelector("#loginNav")) {
-        checkPermissions(uid);
+
+    if (document.querySelector("#checkOutButton")) {
+        document.querySelector("#checkOutButton").style.display = "none";
     }
 
     //load items on inventory page
@@ -142,11 +146,10 @@ function main() {
         document.querySelector("#home").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
             document.querySelector(".search-container").style.display = "none";
-            document.querySelector("#checkOutButton").style.display = "none";
             loadRentals(uid);
         }
     }
-    if (document.querySelector("#execInventory")){
+    if (document.querySelector("#execInventory")) {
         document.querySelector("#execInventory").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
@@ -202,24 +205,6 @@ function storeData() {
     getOldCartID(form, uid);
 }
 
-// {
-//     [rhit.FB_KEY_NAME] : form.name,
-//     [rhit.FB_KEY_EMAIL] : form.email,
-//     [rhit.FB_KEY_PHONE]: form.phone,
-//     [rhit.FB_KEY_ID_NUM] : form.idNum,
-//     [rhit.FB_KEY_ZIP] : form.zip,
-//     [rhit.FB_KEY_STATE] : form.state,
-//     [rhit.FB_KEY_ADDRESS] : form.address,
-//     [rhit.FB_KEY_ITEMS] : form.items,
-//     [rhit.FB_KEY_QUANTITIES] : form.quantities,
-//     [rhit.FB_KEY_SIGNATURE] : form.signature,
-//     [rhit.FB_KEY_PRICE] : form.price,
-//     [rhit.FB_SIGN_DATE]: form.signDate,
-//     [rhit.FB_START]: form.startDate,
-//     [rhit.FB_END]: form.endDate,
-//     [rhit.FB_CITY]: form.city
-// }
-
 function addFormDataToDatabase(form, cartID) {
     fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`).then(
         response => response.json()
@@ -274,16 +259,19 @@ function checkPermissions(uid) {
     fetch(apiURLPermissions + uid).then(
         response => response.json()
     ).then((data) => {
-        console.log(data);
-        if (document.querySelector("#execPendingRentals")) {
+        console.log("here, ", data);
+        if (data.length != 0) {
+
             document.querySelector("#checkOutButton").style.display = "none";
             document.querySelector("#execPendingRentals").style.display = "initial";
+            document.querySelector("#execInventory").style.display = "initial";
             document.querySelector("#execPendingRentals").onclick = (params) => {
                 document.querySelector(".search-container").style.display = "none";
                 //load pending rentals
                 loadPending();
+
+                console.log("finished");
             }
-            console.log("finished");
         }
     });
 }
@@ -492,7 +480,7 @@ function loadEntries(string, isManagement) {
             let interiorTemplate = document.querySelector("#listItemInterior");
 
             //put the item name in the newCard
-            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3]+", $"+data[i][2];
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
@@ -502,9 +490,9 @@ function loadEntries(string, isManagement) {
 
             (function (i) {
                 var id = data[i][0];
-                let editButton = newCard.querySelector(".detail").innerHTML = "EDIT";
-                let deleteButton = newCard.querySelector(".rent").innerHTML = "DELETE";
                 if (isManagement) {
+                    let editButton = newCard.querySelector(".detail").innerHTML = "EDIT";
+                    let deleteButton = newCard.querySelector(".rent").innerHTML = "DELETE";
 
                     editButton.onclick = (event) => {
                         //updateitem

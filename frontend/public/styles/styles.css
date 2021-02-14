@@ -18,10 +18,13 @@ html {
     z-index: 100;
 } */
 
-#execPendingRentals{
+#execInventory, #execPendingRentals{
     display: none;
 }
 
+.inventory-listitem{
+    text-align: start;
+}
 .page-container {
     margin-top: 40px;
 }

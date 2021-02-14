@@ -71,14 +71,15 @@ app.get("/clubmember/:uid", function (req, res) {
     var Connection = require('tedious').Connection;
     var config = makeConfig();
     var connection = new Connection(config);
+    console.log("uid in app.get ",renterID);
     connection.on('connect', function (err) {
         // If no error, then good to proceed.
         if (err) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
-        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = "+renterID+";");
+        console.log("Connected ", renterID);
+        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = '"+renterID+"';");
         return;
     });
     connection.connect();
@@ -327,7 +328,7 @@ app.get("/permissions/:uid", function (req, res) {
         }
         console.log("Connected");
         //execute statement after the connection
-        executeStatement(res, connection, "SELECT * FROM Executive WHERE ID = "+execID+";");
+        executeStatement(res, connection, "SELECT * FROM Executive e WHERE e.ID = '"+execID+"';");
         return;
     });
     connection.connect();
