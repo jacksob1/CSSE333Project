@@ -58,7 +58,7 @@ function main() {
             let name = data.name;
             createClubMember(uid, name);
             //redirect to the homepage
-            //document.location = `body.html#home`;
+            document.location = `body.html#home`;
             //change signin button to a signout button
             if (document.querySelector("#signin")) {
                 document.querySelector("#signin").textContent = "Sign Out";
@@ -123,6 +123,8 @@ function main() {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#checkOutButton").style.display = "none";
+            document.querySelector("#addButton").style.display = "none";
+
             loadEntries("", false);
         }
     }
@@ -133,6 +135,7 @@ function main() {
             console.log("Start Cart with uid: " + uid);
             document.querySelector(".search-container").style.display = "none";
             document.querySelector("#checkOutButton").style.display = "initial";
+            document.querySelector("#addButton").style.display = "none";
             document.querySelector("#checkOutButton").onclick = (event) => {
                 checkOut();
             }
@@ -146,6 +149,7 @@ function main() {
         document.querySelector("#home").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
             document.querySelector(".search-container").style.display = "none";
+            document.querySelector("#addButton").style.display = "none";
             loadRentals(uid);
         }
     }
@@ -153,6 +157,7 @@ function main() {
         document.querySelector("#execInventory").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
+            document.querySelector("#addButton").style.display = "initial";
             loadEntries("", true);
         }
     }
@@ -265,7 +270,10 @@ function checkPermissions(uid) {
             document.querySelector("#checkOutButton").style.display = "none";
             document.querySelector("#execPendingRentals").style.display = "initial";
             document.querySelector("#execInventory").style.display = "initial";
+            document.querySelector("#addButton").style.display = "none";
             document.querySelector("#execPendingRentals").onclick = (params) => {
+
+                document.querySelector("#addButton").style.display = "none";
                 document.querySelector(".search-container").style.display = "none";
                 //load pending rentals
                 loadPending();
@@ -323,8 +331,6 @@ function search(isManagement) {
     console.log(searchword);
     loadEntries(searchword, isManagement);
 }
-
-
 
 //sign in using rosefire
 function signIn() {
@@ -480,7 +486,7 @@ function loadEntries(string, isManagement) {
             let interiorTemplate = document.querySelector("#listItemInterior");
 
             //put the item name in the newCard
-            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3]+", $"+data[i][2];
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3] + ", $" + data[i][2];
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
@@ -495,10 +501,10 @@ function loadEntries(string, isManagement) {
                     let deleteButton = newCard.querySelector(".rent").innerHTML = "DELETE";
 
                     editButton.onclick = (event) => {
-                        //updateitem
+                        updateItem(id);
                     }
                     deleteButton.onclick = (event) => {
-                        //deleteitem
+                        deleteItem(id);
                     }
                 } else {
                     newCard.querySelector(".rent").onclick = (event) => {
@@ -507,11 +513,6 @@ function loadEntries(string, isManagement) {
                     }
                 }
             })(i);
-            // // NOT WORKING!!! Checks if the button has been clicked
-            // newCard.querySelector(".rent").onclick = (event) => {
-            //     console.log("Needs to add item to Rental");
-            //     addItemToRental(data[i][0]);
-            // } 
 
             //add the card to the new list
             newList.append(newCard);
@@ -524,6 +525,14 @@ function loadEntries(string, isManagement) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
+}
+
+function updateItem(itemID) {
+
+}
+
+function deleteItem(itemID) {
+
 }
 
 function addItemToRental(itemID) {

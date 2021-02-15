@@ -27,6 +27,11 @@
     </div>
   </div>
 
+  <!-- FAB -->
+  <button type="button" id="addButton" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addItemDialog">
+    <i class="material-icons">add</i>
+  </button>
+
   <!-- Background -->
   <div id="bg">
     <img src="https://live.staticflickr.com/1717/26309561881_428686d4ac_b.jpg" alt="">
@@ -63,6 +68,44 @@
       </div>
     </div>
   </template>
+
+  <!-- Modal 1 -->
+  <div class="modal fade" id="addItemDialog" tabindex="-1" aria-labelledby="Add item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Item</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Item name">
+          </div>
+          <div class="form-group">
+            <label for="inputCategory">Category:</label>
+            <input type="text" class="form-control" id="inputCategory" placeholder="Item Category">
+          </div>
+          <div class="form-group">
+            <label for="inputQuantity">Quantity:</label>
+            <input type="number" class="form-control" id="inputQuantity" placeholder="Item Quantity">
+          </div>
+          <div class="form-group">
+            <label for="inputPrice">Price:</label>
+            <input type="number" class="form-control" id="inputPrice">
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput" class="bmd-label-floating">Description:</label>
+            <textarea class="form-control" id="descriptionInput" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="nextButton1" type="button" data-dismiss="modal" data-toggle="modal" data-target="#addItemDialog1"
+            class="btn btn-primary">SAVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <!-- Item Interior Template Rentals-->
