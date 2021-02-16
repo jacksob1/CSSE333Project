@@ -145,17 +145,17 @@ function main() {
 
     //load items on cart page
     if (document.querySelector("#cart")) {
-        document.querySelector("#cart").onclick = (event) => {
-            console.log("Start Cart with uid: " + uid);
-            document.querySelector(".search-container").style.display = "none";
-            document.querySelector("#checkOutButton").style.display = "initial";
-            document.querySelector("#addButton").style.display = "none";
-            document.querySelector("#checkOutButton").onclick = (event) => {
-                document.location = `formpage.html`;
+        console.log("cart clicked");
+        
+        fetch(apiURLMakeCart + uid).then(
+            response => response.json()
+        ).then((params) => {
+            document.querySelector("#rentalsTitle").innerHTML = "Cart";
+            document.querySelector("#cart").onclick = (event) => {
+                getCartID(uid);
             }
-            //Need to change SQL server to include renter's username
-            getCartID(uid);
         }
+        );
     }
 
     //load items on homepage
@@ -658,6 +658,14 @@ function addItemToRental(itemID, quantity) {
         }
     });
 }
+
+// document.querySelector(".search-container").style.display = "none";
+// document.querySelector("#checkOutButton").style.display = "initial";
+// document.querySelector("#addButton").style.display = "none";
+// document.querySelector("#checkOutButton").onclick = (event) => {
+//     document.location = `formpage.html`;
+// }
+
 
 function makeCart(itemID, uid, quantity) {
     fetch(apiURLMakeCart + uid).then(

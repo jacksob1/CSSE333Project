@@ -311,7 +311,7 @@ app.get("/cartremove/:rentalID&:itemID", function (req, res) {
 
 
 //make a new cart if the user doesn not have one
-app.post("/makecart/:uid", function (req, res) {
+app.get("/makecart/:uid", function (req, res) {
     //retrieve the search word from the parameters
     let renterID = req.params.uid;
     //make connection and config
@@ -389,7 +389,7 @@ app.get("/pending", function (req, res) {
             process.exit(1);
         }
         //execute statement after the connection
-        executeStatement(res, connection, "SELECT * FROM Rental WHERE ExecutiveSignature is null"); // put in after tomorrow "RenterSignature is not null and"
+        executeStatement(res, connection, "SELECT * FROM Rental WHERE ExecutiveSignature is null AND RenterSignature is not null"); // put in after tomorrow "RenterSignature is not null and"
         return;
     });
     connection.connect();
@@ -458,7 +458,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
         }
         console.log( "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = '"+startDate+"', @newEndDate = '"+endDate+"', @newRenterSignature = "+sign+";");
 
-        executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
+        executeStatement(res, connection, `EXEC [update_Rental] @ID = ${cartID}, @newStartDate = '${startDate}', @newEndDate = '${endDate}', @newRenterSignature = ${sign};`);
         return;
     });
     connection.connect();
