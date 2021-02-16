@@ -115,7 +115,8 @@ function main() {
 
     function createNewMember(uid, name) {
         fetch(apiURLClubMemberAdd + uid + "&" + name, {
-            method: "POST"}).then(
+            method: "POST"
+        }).then(
             response => response.json()
         ).then((data) => {
             console.log("member added");
@@ -209,7 +210,8 @@ function getModalValues(isAdd, id) {
     const description = document.querySelector("#descriptionInput").value;
     const quantity = document.querySelector("#inputQuantity").value;
     fetch(`${url}${name}&${category}&${price}&${description}&${quantity}&${uid}&${id}`, {
-        method: "POST"}).then(
+        method: "POST"
+    }).then(
         response => response.json()
     ).then((data) => {
         loadEntries("", true);
@@ -245,14 +247,18 @@ function storeData() {
 }
 
 function addFormDataToDatabase(form, cartID) {
-    fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`, {
-        method: "POST"
+    fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.startDate}&${form.endDate}&${cartID}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify(form.signature)
     }).then(
-        response => response.json()
-    ).then((data) => {
-        console.log("Updated Rental!");
-        document.location = `body.html#home`;
-    });
+    response => response.json()
+).then((data) => {
+    console.log("Updated Rental!");
+    document.location = `body.html#home`;
+});
 }
 
 function getOldCartID(form, uid) {

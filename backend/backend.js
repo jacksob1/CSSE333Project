@@ -1,8 +1,9 @@
 var express = require("express");
+var bodyParser = require('body-parser');
 var app = express();
 var cors = require("cors");
 app.use(cors());
-
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //rosefire variables
 var RosefireTokenVerifier = require('rosefire-node');
@@ -413,13 +414,13 @@ app.get("/permissions/:uid", function (req, res) {
     connection.connect();
 })
 
-app.post("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate&:cartID", function(req, res){
+app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cartID", function(req, res){
     let name = req.params.name;
     let address = req.params.address;
     let city = req.params.city;
     let state = req.params.state;
     let zip = req.params.zip;
-    let sign = req.params.sign;
+    let sign = JSON.stringify(req.body);
     let startDate = req.params.startDate;
     let endDate = req.params.endDate;
     let cartID = req.params.cartID;
@@ -432,7 +433,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected in add form");
+        console.log("EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
 
         executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
         return;
