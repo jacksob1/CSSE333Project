@@ -107,7 +107,7 @@ app.get("/delete/:itemID", function (req, res) {
 })
 
 //add an item to the inventory
-app.get("/add/:name&:category&:price&:description&:quantity&:uid", function (req, res) {
+app.get("/add/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
     let name = req.params.name;
     let category = req.params.category;
     let price = req.params.price;
@@ -129,6 +129,32 @@ app.get("/add/:name&:category&:price&:description&:quantity&:uid", function (req
     });
     connection.connect();
 })
+
+//add an item to the inventory
+app.get("/edit/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
+    let name = req.params.name;
+    let category = req.params.category;
+    let price = req.params.price;
+    let description = req.params.description;
+    let quantity = req.params.quantity;
+    let uid = req.params.uid;
+    let id = req.params.id;
+    console.log(category);
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        executeStatement(res, connection, `EXEC [update_Item] @newTotalQuantity=${quantity}, @newPrice=${price}, @newName='${name}', @newDescription='${description}', @newCategory='${category}', @newManager='${uid}', @ItemID=${id};`);
+        return;
+    });
+    connection.connect();
+})
+
 
 //create a new club member
 app.get("/clubmemberadd/:renterID&:name", function (req, res) {

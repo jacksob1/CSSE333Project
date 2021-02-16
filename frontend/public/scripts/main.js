@@ -167,7 +167,7 @@ function main() {
             document.querySelector("#addButton").style.display = "initial";
             // on modal save button press
             document.querySelector("#addSaveButton").onclick = (event) => {
-                getModalValues();
+                getModalValues(true, -1);
             }
             loadEntries("", true);
         }
@@ -191,13 +191,17 @@ function main() {
     }
 }
 
-function getModalValues() {
+function getModalValues(isAdd, id) {
+    let url = apiURLAdd;
+    if (isAdd!=true){
+        url = apiURLEdit;
+    }
     const name = document.querySelector("#inputName").value;
     const category = document.querySelector("#inputCategory").value;
     const price = document.querySelector("#inputPrice").value;
     const description = document.querySelector("#descriptionInput").value;
     const quantity = document.querySelector("#inputQuantity").value;
-    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${uid}`).then(
+    fetch(`${url}${name}&${category}&${price}&${description}&${quantity}&${uid}&${id}`).then(
         response => response.json()
     ).then((data) => {
         loadEntries("", true);
@@ -526,10 +530,18 @@ function loadEntries(string, isManagement) {
                     editButton.innerHTML = "EDIT";
                     var deleteButton = newCard.querySelector(".rent");
                     deleteButton.innerHTML = "DELETE";
+
                     console.log("is management");
+
                     editButton.onclick = (event) => {
+                       $("#addItemDialog").modal("show");
+                       var addModal = document.querySelector("#addItemDialog");
+                       addModal.querySelector(".modal-title").innerHTML = "Edit Item";
+                       addModal.querySelector("#addSaveButton").onclick = (event) => {
+                           getModalValues(false, id);
+                           loadEntries("", true);
+                       }
                         console.log("edit clicked");
-                        updateItem(id);
                     }
                     deleteButton.onclick = (event) => {
                         console.log("delete clicked");
@@ -554,14 +566,6 @@ function loadEntries(string, isManagement) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
-}
-
-function updateItem(itemID) {
-    fetch(apiURLEdit + itemID).then(
-        response => response.json()
-    ).then((data) => {
-        loadEntries("", true);
-    });
 }
 
 function deleteItem(itemID) {
