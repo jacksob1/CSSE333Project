@@ -1,5 +1,7 @@
 //const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require("constants");
 
+// const { DocumentProvider } = require("mongoose");
+
 var rhit = rhit || {};
 
 rhit.FB_KEY_NAME = "name";
@@ -42,6 +44,9 @@ function htmlToElement(html) {
 
 function main() {
     console.log("IN MAIN\n");
+    if (document.querySelector("#formNav")) {
+        checkOut();
+    }
 
     //check to see if a token is available
     var token = localStorage.getItem("token");
@@ -63,7 +68,7 @@ function main() {
             let name = data.name;
             createClubMember(uid, name);
             //redirect to the homepage
-            if (!document.querySelector("#formNav")&&document.querySelector("#loginNav")){
+            if (!document.querySelector("#formNav") && document.querySelector("#loginNav")) {
                 document.location = `body.html#home`;
             }
             //change signin button to a signout button
@@ -109,7 +114,8 @@ function main() {
     }
 
     function createNewMember(uid, name) {
-        fetch(apiURLClubMemberAdd + uid + "&" + name).then(
+        fetch(apiURLClubMemberAdd + uid + "&" + name, {
+            method: "POST"}).then(
             response => response.json()
         ).then((data) => {
             console.log("member added");
@@ -143,7 +149,7 @@ function main() {
             document.querySelector("#checkOutButton").style.display = "initial";
             document.querySelector("#addButton").style.display = "none";
             document.querySelector("#checkOutButton").onclick = (event) => {
-                checkOut();
+                document.location = `formpage.html`;
             }
             //Need to change SQL server to include renter's username
             getCartID(uid);
@@ -194,7 +200,7 @@ function main() {
 
 function getModalValues(isAdd, id) {
     let url = apiURLAdd;
-    if (isAdd!=true){
+    if (isAdd != true) {
         url = apiURLEdit;
     }
     const name = document.querySelector("#inputName").value;
@@ -202,7 +208,8 @@ function getModalValues(isAdd, id) {
     const price = document.querySelector("#inputPrice").value;
     const description = document.querySelector("#descriptionInput").value;
     const quantity = document.querySelector("#inputQuantity").value;
-    fetch(`${url}${name}&${category}&${price}&${description}&${quantity}&${uid}&${id}`).then(
+    fetch(`${url}${name}&${category}&${price}&${description}&${quantity}&${uid}&${id}`, {
+        method: "POST"}).then(
         response => response.json()
     ).then((data) => {
         loadEntries("", true);
@@ -212,9 +219,9 @@ function getModalValues(isAdd, id) {
 
 //checks out cart
 function checkOut() {
-    document.location = `formpage.html`;
-    console.log("here");
+    console.log("here in checkout");
     document.querySelector("#submitForm").onclick = (params) => {
+        console.log("clicked submit");
         storeData();
     }
 }
@@ -227,24 +234,24 @@ function storeData() {
     let zip = document.querySelector("#inputZip").value;
     let state = document.querySelector("#inputState").value;
     let address = document.querySelector("#inputAddress").value;
-    let items = rhit.fbCartManager.items;
-    let signature = $('#sig').signature('toSVG');
-    let price = document.querySelector("#gearCost").innerHTML;
-    let quantities = rhit.fbCartManager.quantities;
+    let signature = $('#sig').signature('toJSON');
     let signDate = document.querySelector("#inputSignDate").value;
     let startDate = document.querySelector("#inputStart").value;
     let endDate = document.querySelector("#inputEnd").value;
     let city = document.querySelector("#inputCity").value;
-    let form = new rhit.Form(name, email, phone, idNum, zip, state, city, address, items, quantities, signature, signDate, price, startDate, endDate);
-    console.log(form);
+    let form = new rhit.Form(name, email, phone, idNum, zip, state, city, address, signature, signDate, startDate, endDate);
+    console.log("form is: ", form);
     getOldCartID(form, uid);
 }
 
 function addFormDataToDatabase(form, cartID) {
-    fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`).then(
+    fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.signature}&${form.startDate}&${form.endDate}&${cartID}`, {
+        method: "POST"
+    }).then(
         response => response.json()
     ).then((data) => {
         console.log("Updated Rental!");
+        document.location = `body.html#home`;
     });
 }
 
@@ -253,12 +260,13 @@ function getOldCartID(form, uid) {
     fetch(apiURLCart + uid).then(
         response => response.json()
     ).then((data) => {
+        console.log("add form");
         addFormDataToDatabase(form, data[0][0]);
     });
 }
 
 rhit.Form = class {
-    constructor(name, email, phone, idNum, zip, state, city, address, items, quantities, signature, signDate, price, startDate, endDate) {
+    constructor(name, email, phone, idNum, zip, state, city, address, signature, signDate, startDate, endDate) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -266,10 +274,7 @@ rhit.Form = class {
         this.zip = zip;
         this.state = state;
         this.address = address;
-        this.items = items;
         this.signature = signature;
-        this.price = price;
-        this.quantities = quantities;
         this.signDate = signDate;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -536,14 +541,14 @@ function loadEntries(string, isManagement) {
                     console.log("is management");
 
                     editButton.onclick = (event) => {
-                       $("#addItemDialog").modal("show");
-                       var addModal = document.querySelector("#addItemDialog");
-                       populateEditModal(id, addModal);
-                       addModal.querySelector(".modal-title").innerHTML = "Edit Item";
-                       addModal.querySelector("#addSaveButton").onclick = (event) => {
-                           getModalValues(false, id);
-                           loadEntries("", true);
-                       }
+                        $("#addItemDialog").modal("show");
+                        var addModal = document.querySelector("#addItemDialog");
+                        populateEditModal(id, addModal);
+                        addModal.querySelector(".modal-title").innerHTML = "Edit Item";
+                        addModal.querySelector("#addSaveButton").onclick = (event) => {
+                            getModalValues(false, id);
+                            loadEntries("", true);
+                        }
                         console.log("edit clicked");
                     }
                     deleteButton.onclick = (event) => {
@@ -571,8 +576,8 @@ function loadEntries(string, isManagement) {
     oldList.parentElement.appendChild(newList);
 }
 
-function populateEditModal(id, modal){
-    fetch(apiURLItem+id).then(
+function populateEditModal(id, modal) {
+    fetch(apiURLItem + id).then(
         response => response.json()
     ).then((data) => {
         console.log("modal data: ", data);
@@ -586,7 +591,9 @@ function populateEditModal(id, modal){
 
 function deleteItem(itemID) {
     console.log("in delete item");
-    fetch(apiURLDelete + itemID).then(
+    fetch(apiURLDelete + itemID, {
+        method: "POST"
+    }).then(
         response => response.json()
     ).then((data) => {
         loadEntries("", true);
@@ -619,7 +626,9 @@ function makeCart(itemID, uid) {
 
 function addToCart(itemID, cartID) {
     console.log("addtocart");
-    fetch(apiURLAddToCart + cartID + "&" + itemID).then(
+    fetch(apiURLAddToCart + cartID + "&" + itemID, {
+        method: "POST"
+    }).then(
         response => response.json()
     ).then((data) => {
         console.log("after add data = " + data);

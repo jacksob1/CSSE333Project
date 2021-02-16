@@ -78,7 +78,6 @@ app.get("/clubmember/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected ", renterID);
         executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = '"+renterID+"';");
         return;
     });
@@ -88,7 +87,7 @@ app.get("/clubmember/:uid", function (req, res) {
 
 
 //check to see if a club member exists
-app.get("/delete/:itemID", function (req, res) {
+app.post("/delete/:itemID", function (req, res) {
     let itemID = parseInt(req.params.itemID);
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -107,7 +106,7 @@ app.get("/delete/:itemID", function (req, res) {
 })
 
 //add an item to the inventory
-app.get("/add/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
+app.post("/add/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
     let name = req.params.name;
     let category = req.params.category;
     let price = req.params.price;
@@ -131,7 +130,7 @@ app.get("/add/:name&:category&:price&:description&:quantity&:uid&:id", function 
 })
 
 //add an item to the inventory
-app.get("/edit/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
+app.post("/edit/:name&:category&:price&:description&:quantity&:uid&:id", function (req, res) {
     let name = req.params.name;
     let category = req.params.category;
     let price = req.params.price;
@@ -157,7 +156,7 @@ app.get("/edit/:name&:category&:price&:description&:quantity&:uid&:id", function
 
 
 //create a new club member
-app.get("/clubmemberadd/:renterID&:name", function (req, res) {
+app.post("/clubmemberadd/:renterID&:name", function (req, res) {
     let renterID = req.params.renterID;
     let name = req.params.name;
     var Connection = require('tedious').Connection;
@@ -170,7 +169,6 @@ app.get("/clubmemberadd/:renterID&:name", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         executeStatement(res, connection, "EXEC [create_ClubMember] @MemberID= "+renterID+", @Name = ["+name+"];");
         return;
     });
@@ -188,7 +186,6 @@ app.get("/db", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         executeStatement(res, connection, "SELECT * FROM Item;");
         return;
     });
@@ -207,7 +204,6 @@ app.get("/item/:itemID", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         executeStatement(res, connection, `SELECT * FROM Item WHERE Item.ItemID = ${itemID};`);
         return;
     });
@@ -233,7 +229,6 @@ app.get("/search/:search", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         //execute statement after the connection
         executeStatement(res, connection, "EXEC [search_Item] @searchWord = '"+ searchword +"';");
         return;
@@ -257,7 +252,6 @@ app.get("/rentals/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         //execute statement after the connection
         executeStatement(res, connection, "EXEC [view_rentals_by_user] @RenterID = "+renterID+";");
         return;
@@ -266,7 +260,7 @@ app.get("/rentals/:uid", function (req, res) {
 })
 
 //add an item to the cart
-app.get("/cartadd/:rentalID&:itemID", function (req, res) {
+app.post("/cartadd/:rentalID&:itemID", function (req, res) {
     //retrieve the search word from the parameters
     var rentalID = req.params.rentalID;
     var itemID = req.params.itemID;
@@ -315,7 +309,7 @@ app.get("/cartremove/:rentalID&:itemID", function (req, res) {
 
 
 //make a new cart if the user doesn not have one
-app.get("/makecart/:uid", function (req, res) {
+app.post("/makecart/:uid", function (req, res) {
     //retrieve the search word from the parameters
     let renterID = req.params.uid;
     //make connection and config
@@ -328,7 +322,6 @@ app.get("/makecart/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected in cart");
         //execute statement after the connection
         executeStatement(res, connection, "EXEC [create_Rental] @RenterID = "+renterID+";");
         return;
@@ -351,7 +344,6 @@ app.get("/cart/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected in cart");
         //execute statement after the connection
         executeStatement(res, connection, "EXEC [cart_id] @RenterID = '"+renterID+"';");
         return;
@@ -372,7 +364,6 @@ app.get("/pending", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         //execute statement after the connection
         executeStatement(res, connection, "SELECT * FROM Rental WHERE ExecutiveSignature is null"); // put in after tomorrow "RenterSignature is not null and"
         return;
@@ -394,7 +385,6 @@ app.get("/rentalitems/:id", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         //execute statement after the connection
         executeStatement(res, connection, "EXEC [view_items_in_rental] @RentalID = "+ id); // put in after tomorrow "RenterSignature is not null and"
         return;
@@ -416,7 +406,6 @@ app.get("/permissions/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
         //execute statement after the connection
         executeStatement(res, connection, `EXEC [get_Executive] @ID=${execID}`);
         
@@ -424,7 +413,7 @@ app.get("/permissions/:uid", function (req, res) {
     connection.connect();
 })
 
-app.get("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate&:cartID", function(req, res){
+app.post("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate&:cartID", function(req, res){
     let name = req.params.name;
     let address = req.params.address;
     let city = req.params.city;
@@ -443,9 +432,9 @@ app.get("/submitForm/:name&:address&:city&:state&:zip&:sign&:startDate&:endDate&
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected");
+        console.log("Connected in add form");
 
-        executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+" @newStartDate = '"+startDate+"' @newEndDate = '"+endDate+"' @newRenterSignature = "+sign+";");
+        executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
         return;
     });
     connection.connect();
