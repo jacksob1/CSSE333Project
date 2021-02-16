@@ -331,6 +331,28 @@ app.post("/makecart/:uid", function (req, res) {
     connection.connect();
 })
 
+//make a new category
+app.post("/addcategory/:category", function (req, res) {
+    //retrieve the search word from the parameters
+    let category = req.params.category;
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        //execute statement after the connection
+        executeStatement(res, connection, "EXEC [create_Category] @Name = "+category+";");
+        return;
+    });
+    connection.connect();
+})
+
+
 //find id of cart based on uid
 app.get("/cart/:uid", function (req, res) {
     //retrieve the search word from the parameters

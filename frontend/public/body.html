@@ -28,7 +28,7 @@
   </div>
 
   <!-- FAB -->
-  <button type="button" id="addButton" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addItemDialog">
+  <button type="button" id="addButton" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addItemDialogOptions">
     <i class="material-icons">add</i>
   </button>
 
@@ -69,7 +69,7 @@
     </div>
   </template>
 
-  <!-- Modal 1 -->
+  <!-- Add Item Modal -->
   <div class="modal fade" id="addItemDialog" tabindex="-1" aria-labelledby="Add item dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -100,36 +100,85 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-          <button id="addSaveButton" type="button" data-dismiss="modal"
-            class="btn btn-primary">SAVE</button>
+          <button id="addSaveButton" type="button" data-dismiss="modal" class="btn btn-primary">SAVE</button>
         </div>
       </div>
     </div>
   </div>
 
 
-    <!-- Modal 1 -->
-    <div class="modal fade" id="rentDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Rent Item</h5>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="inputQuantity">Quantity:</label>
-              <input type="number" class="form-control" id="inputQuantity" placeholder="Item Quantity">
+  <!-- Rent Modal -->
+  <div class="modal fade" id="rentDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Rent Item</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputQuantity">Quantity:</label>
+            <input type="number" class="form-control" id="inputQuantity" placeholder="Item Quantity">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-            <button id="rentButton" type="button" data-dismiss="modal"
-              class="btn btn-primary">RENT</button>
+            <button id="rentButton" type="button" data-dismiss="modal" class="btn btn-primary">RENT</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-  <!-- Item Interior Template Rentals-->
+  <!-- Create Modal -->
+  <div class="modal fade" id="addCategoryDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Category</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Item name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="createButton" type="button" data-dismiss="modal" class="btn btn-primary">CREATE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Select Add Type Modal -->
+  <div class="modal fade" id="addItemDialogOptions" tabindex="-1" aria-labelledby="Add item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Category or Item?</h5>
+        </div>
+        <div class="modal-body">
+          <div class="radio">
+            <label>
+              <input type="radio" name="optionsRadios" id="addCategory" value="option1" checked>
+              Category
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="optionsRadios" id="addItem" value="option2">
+              Item
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="nextButton" type="button" data-dismiss="modal" class="btn btn-primary">NEXT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Interior Template Rentals -->
   <template id="listItemInteriorRentalItems">
     <hr>
     <div class="row">

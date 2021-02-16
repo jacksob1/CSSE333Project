@@ -30,6 +30,7 @@ apiURLClubMemberAdd = "http://localhost:4000/clubmemberadd/";
 apiURLCartRemove = "http://localhost:4000/cartremove/";
 apiURLSubmitForm = "http://localhost:4000/submitForm/";
 apiURLItem = "http://localhost:4000/item/";
+apiURLAddCategory = "http://localhost:4000/addcategory/";
 
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
@@ -172,10 +173,30 @@ function main() {
         document.querySelector("#execInventory").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
-            document.querySelector("#addButton").style.display = "initial";
-            // on modal save button press
-            document.querySelector("#addSaveButton").onclick = (event) => {
-                getModalValues(true, -1);
+            let addButton = document.querySelector("#addButton")
+            addButton.style.display = "initial";
+            addButton.onclick = (event) => {
+                $("#addItemDialogOption").modal("show");
+                // on modal save button press
+                document.querySelector("#nextButton").onclick = (event) => {
+                    if (document.querySelector("#addCategory").checked) {
+                        $("#addCategoryDialog").modal("show");
+                        var addModal = document.querySelector("#addCategoryDialog");
+                        addModal.querySelector("#createButton").onclick = (event) => {
+                            //add the category here
+                            console.log("adding here");
+                            addCategory(addModal.querySelector("#inputName").value);
+
+                        }
+                    } else if (document.querySelector("#addItem").checked) {
+                        $("#addItemDialog").modal("show");
+                        var addModal = document.querySelector("#addItemDialog");
+                        addModal.querySelector("#addSaveButton").onclick = (event) => {
+                            getModalValues(true, -1);
+                            loadEntries("", true);
+                        }
+                    }
+                }
             }
             loadEntries("", true);
         }
@@ -197,6 +218,16 @@ function main() {
             search(isManagement);
         }
     }
+}
+
+function addCategory(name) {
+    fetch(apiURLAddCategory + name, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
+
+    });
 }
 
 function getModalValues(isAdd, id) {
@@ -248,17 +279,17 @@ function storeData() {
 
 function addFormDataToDatabase(form, cartID) {
     fetch(`${apiURLSubmitForm}${form.name}&${form.address}&${form.city}&${form.state}&${form.zip}&${form.startDate}&${form.endDate}&${cartID}`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-              },
-            body: JSON.stringify(form.signature)
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form.signature)
     }).then(
-    response => response.json()
-).then((data) => {
-    console.log("Updated Rental!");
-    document.location = `body.html#home`;
-});
+        response => response.json()
+    ).then((data) => {
+        console.log("Updated Rental!");
+        document.location = `body.html#home`;
+    });
 }
 
 function getOldCartID(form, uid) {
@@ -639,7 +670,7 @@ function makeCart(itemID, uid, quantity) {
 
 function addToCart(itemID, cartID, quantity) {
     console.log("addtocart");
-    fetch(apiURLAddToCart + cartID + "&" + itemID +"&"+quantity, {
+    fetch(apiURLAddToCart + cartID + "&" + itemID + "&" + quantity, {
         method: "POST"
     }).then(
         response => response.json()
