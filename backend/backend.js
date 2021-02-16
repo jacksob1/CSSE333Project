@@ -85,6 +85,31 @@ app.get("/clubmember/:uid", function (req, res) {
     connection.connect();
 })
 
+
+//add an item to the inventory
+app.get("/clubmember/:name&:category&:price&:description&:quantity", function (req, res) {
+    let name = req.params.name;
+    let category = req.params.category;
+    let price = req.params.price;
+    let description = req.params.description;
+    let quantity = req.params.quantity;
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    console.log("uid in app.get ",renterID);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected ", renterID);
+        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = '"+renterID+"';");
+        return;
+    });
+    connection.connect();
+})
+
 //create a new club member
 app.get("/clubmemberadd/:renterID&:name", function (req, res) {
     let renterID = req.params.renterID;

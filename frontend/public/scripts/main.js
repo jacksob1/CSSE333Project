@@ -18,6 +18,7 @@ apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
 apiURLAuth = "http://localhost:4000/auth/";
 apiURLCart = "http://localhost:4000/cart/";
+apiURLAdd = "http://localhost:4000/add/";
 apiURLAddToCart = "http://localhost:4000/cartadd/";
 apiURLMakeCart = "http://localhost:4000/makecart/";
 apiURLClubMember = "http://localhost:4000/clubmember/";
@@ -58,7 +59,7 @@ function main() {
             let name = data.name;
             createClubMember(uid, name);
             //redirect to the homepage
-            document.location = `body.html#home`;
+            //document.location = `body.html#home`;
             //change signin button to a signout button
             if (document.querySelector("#signin")) {
                 document.querySelector("#signin").textContent = "Sign Out";
@@ -124,7 +125,6 @@ function main() {
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#checkOutButton").style.display = "none";
             document.querySelector("#addButton").style.display = "none";
-
             loadEntries("", false);
         }
     }
@@ -153,11 +153,17 @@ function main() {
             loadRentals(uid);
         }
     }
+
+    // set up the executive inventory page
     if (document.querySelector("#execInventory")) {
         document.querySelector("#execInventory").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#addButton").style.display = "initial";
+            // on modal save button press
+            document.querySelector("#addSaveButton").onclick = (event) => {
+                getModalValues();
+            }
             loadEntries("", true);
         }
     }
@@ -178,6 +184,19 @@ function main() {
             search(isManagement);
         }
     }
+}
+
+function getModalValues() {
+    const name = document.querySelector("#inputName").value;
+    const category = document.querySelector("#inputCategory").value;
+    const price = document.querySelector("#inputPrice").value;
+    const description = document.querySelector("#descriptionInput").value;
+    const quantity = document.querySelector("#inputQuantity");
+    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}`).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("item added");
+    });
 }
 
 //checks out cart
