@@ -195,6 +195,25 @@ app.get("/db", function (req, res) {
     connection.connect();
 })
 
+//get specific item
+app.get("/item/:itemID", function (req, res) {
+    let itemID = req.params.itemID;
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        console.log("Connected");
+        executeStatement(res, connection, `SELECT * FROM Item WHERE Item.ItemID = ${itemID};`);
+        return;
+    });
+    connection.connect();
+})
+
 //search for items with a search word parameter
 app.get("/search/:search", function (req, res) {
     //retrieve the search word from the parameters

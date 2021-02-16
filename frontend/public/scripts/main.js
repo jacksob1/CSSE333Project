@@ -27,6 +27,7 @@ apiURLClubMember = "http://localhost:4000/clubmember/";
 apiURLClubMemberAdd = "http://localhost:4000/clubmemberadd/";
 apiURLCartRemove = "http://localhost:4000/cartremove/";
 apiURLSubmitForm = "http://localhost:4000/submitForm/";
+apiURLItem = "http://localhost:4000/item/";
 
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
@@ -523,6 +524,7 @@ function loadEntries(string, isManagement) {
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
 
+            //used to set buttons and their actions
             (function (i) {
                 var id = data[i][0];
                 if (isManagement) {
@@ -536,6 +538,7 @@ function loadEntries(string, isManagement) {
                     editButton.onclick = (event) => {
                        $("#addItemDialog").modal("show");
                        var addModal = document.querySelector("#addItemDialog");
+                       populateEditModal(id, addModal);
                        addModal.querySelector(".modal-title").innerHTML = "Edit Item";
                        addModal.querySelector("#addSaveButton").onclick = (event) => {
                            getModalValues(false, id);
@@ -566,6 +569,19 @@ function loadEntries(string, isManagement) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
+}
+
+function populateEditModal(id, modal){
+    fetch(apiURLItem+id).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("modal data: ", data);
+        modal.querySelector("#inputName").value = data[0][3];
+        modal.querySelector("#inputCategory").value = data[0][5];
+        modal.querySelector("#inputPrice").value = data[0][2];
+        modal.querySelector("#descriptionInput").value = data[0][4];
+        modal.querySelector("#inputQuantity").value = data[0][1];
+    });
 }
 
 function deleteItem(itemID) {
