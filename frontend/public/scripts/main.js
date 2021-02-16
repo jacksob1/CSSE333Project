@@ -19,12 +19,15 @@ apiURLPending = "http://localhost:4000/pending/";
 apiURLAuth = "http://localhost:4000/auth/";
 apiURLCart = "http://localhost:4000/cart/";
 apiURLAdd = "http://localhost:4000/add/";
+apiURLEdit = "http://localhost:4000/edit/";
+apiURLDelete = "http://localhost:4000/delete/";
 apiURLAddToCart = "http://localhost:4000/cartadd/";
 apiURLMakeCart = "http://localhost:4000/makecart/";
 apiURLClubMember = "http://localhost:4000/clubmember/";
 apiURLClubMemberAdd = "http://localhost:4000/clubmemberadd/";
 apiURLCartRemove = "http://localhost:4000/cartremove/";
 apiURLSubmitForm = "http://localhost:4000/submitForm/";
+
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -59,7 +62,9 @@ function main() {
             let name = data.name;
             createClubMember(uid, name);
             //redirect to the homepage
-            //document.location = `body.html#home`;
+            if (!document.querySelector("#formNav")&&document.querySelector("#loginNav")){
+                document.location = `body.html#home`;
+            }
             //change signin button to a signout button
             if (document.querySelector("#signin")) {
                 document.querySelector("#signin").textContent = "Sign Out";
@@ -191,10 +196,11 @@ function getModalValues() {
     const category = document.querySelector("#inputCategory").value;
     const price = document.querySelector("#inputPrice").value;
     const description = document.querySelector("#descriptionInput").value;
-    const quantity = document.querySelector("#inputQuantity");
-    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}`).then(
+    const quantity = document.querySelector("#inputQuantity").value;
+    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${uid}`).then(
         response => response.json()
     ).then((data) => {
+        loadEntries("", true);
         console.log("item added");
     });
 }
@@ -516,13 +522,17 @@ function loadEntries(string, isManagement) {
             (function (i) {
                 var id = data[i][0];
                 if (isManagement) {
-                    let editButton = newCard.querySelector(".detail").innerHTML = "EDIT";
-                    let deleteButton = newCard.querySelector(".rent").innerHTML = "DELETE";
-
+                    var editButton = newCard.querySelector(".detail");
+                    editButton.innerHTML = "EDIT";
+                    var deleteButton = newCard.querySelector(".rent");
+                    deleteButton.innerHTML = "DELETE";
+                    console.log("is management");
                     editButton.onclick = (event) => {
+                        console.log("edit clicked");
                         updateItem(id);
                     }
                     deleteButton.onclick = (event) => {
+                        console.log("delete clicked");
                         deleteItem(id);
                     }
                 } else {
@@ -547,11 +557,20 @@ function loadEntries(string, isManagement) {
 }
 
 function updateItem(itemID) {
-
+    fetch(apiURLEdit + itemID).then(
+        response => response.json()
+    ).then((data) => {
+        loadEntries("", true);
+    });
 }
 
 function deleteItem(itemID) {
-
+    console.log("in delete item");
+    fetch(apiURLDelete + itemID).then(
+        response => response.json()
+    ).then((data) => {
+        loadEntries("", true);
+    });
 }
 
 function addItemToRental(itemID) {

@@ -86,25 +86,45 @@ app.get("/clubmember/:uid", function (req, res) {
 })
 
 
-//add an item to the inventory
-app.get("/clubmember/:name&:category&:price&:description&:quantity", function (req, res) {
-    let name = req.params.name;
-    let category = req.params.category;
-    let price = req.params.price;
-    let description = req.params.description;
-    let quantity = req.params.quantity;
+
+//check to see if a club member exists
+app.get("/delete/:itemID", function (req, res) {
+    let itemID = parseInt(req.params.itemID);
     var Connection = require('tedious').Connection;
     var config = makeConfig();
+    console.log("ITEMID: ", itemID);
     var connection = new Connection(config);
-    console.log("uid in app.get ",renterID);
     connection.on('connect', function (err) {
         // If no error, then good to proceed.
         if (err) {
             console.log(err);
             process.exit(1);
         }
-        console.log("Connected ", renterID);
-        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = '"+renterID+"';");
+        executeStatement(res, connection,`EXEC [delete_Item] @ItemID=${itemID}`);
+        return;
+    });
+    connection.connect();
+})
+
+//add an item to the inventory
+app.get("/add/:name&:category&:price&:description&:quantity&:uid", function (req, res) {
+    let name = req.params.name;
+    let category = req.params.category;
+    let price = req.params.price;
+    let description = req.params.description;
+    let quantity = req.params.quantity;
+    let uid = req.params.uid;
+    console.log(category);
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        executeStatement(res, connection, `EXEC [create_Item] @TotalQuantity=${quantity}, @Price=${price}, @Name='${name}', @Description='${description}', @Category='${category}', @Manager='${uid}';`);
         return;
     });
     connection.connect();
@@ -353,8 +373,8 @@ app.get("/permissions/:uid", function (req, res) {
         }
         console.log("Connected");
         //execute statement after the connection
-        executeStatement(res, connection, "SELECT * FROM Executive e WHERE e.ID = '"+execID+"';");
-        return;
+        executeStatement(res, connection, `EXEC [get_Executive] @ID=${execID}`);
+        
     });
     connection.connect();
 })
