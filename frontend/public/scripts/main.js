@@ -563,8 +563,14 @@ function loadEntries(string, isManagement) {
                     }
                 } else {
                     newCard.querySelector(".rent").onclick = (event) => {
+
+                        $("#rentDialog").modal("show");
                         console.log("Needs to add item to Rental");
-                        addItemToRental(id);
+                        var rentModal = document.querySelector("#rentDialog");
+                        rentModal.querySelector("#rentButton").onclick = (event) => {
+                            let quantity = rentModal.querySelector("#inputQuantity").value;
+                            addItemToRental(id, quantity);
+                        }
                     }
                 }
             })(i);
@@ -606,7 +612,8 @@ function deleteItem(itemID) {
     });
 }
 
-function addItemToRental(itemID) {
+function addItemToRental(itemID, quantity) {
+
     console.log("uid is =" + uid);
     fetch(apiURLCart + uid).then(
         response => response.json()
@@ -616,23 +623,23 @@ function addItemToRental(itemID) {
         } else {
             console.log("add item to rental " + data);
             //addToCart(itemID, data[0][0]); //use this when username/id is fixed
-            addToCart(itemID, data);
+            addToCart(itemID, data, quantity);
         }
     });
 }
 
-function makeCart(itemID, uid) {
+function makeCart(itemID, uid, quantity) {
     fetch(apiURLMakeCart + uid).then(
         response => response.json()
     ).then((data) => {
         console.log("make cart" + data);
-        addToCart(itemID, data.ID);
+        addToCart(itemID, data.ID, quantity);
     });
 }
 
-function addToCart(itemID, cartID) {
+function addToCart(itemID, cartID, quantity) {
     console.log("addtocart");
-    fetch(apiURLAddToCart + cartID + "&" + itemID, {
+    fetch(apiURLAddToCart + cartID + "&" + itemID +"&"+quantity, {
         method: "POST"
     }).then(
         response => response.json()

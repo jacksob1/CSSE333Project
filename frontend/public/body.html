@@ -108,6 +108,27 @@
   </div>
 
 
+    <!-- Modal 1 -->
+    <div class="modal fade" id="rentDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Rent Item</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputQuantity">Quantity:</label>
+              <input type="number" class="form-control" id="inputQuantity" placeholder="Item Quantity">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+            <button id="rentButton" type="button" data-dismiss="modal"
+              class="btn btn-primary">RENT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <!-- Item Interior Template Rentals-->
   <template id="listItemInteriorRentalItems">
     <hr>

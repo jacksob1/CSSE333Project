@@ -261,10 +261,11 @@ app.get("/rentals/:uid", function (req, res) {
 })
 
 //add an item to the cart
-app.post("/cartadd/:rentalID&:itemID", function (req, res) {
+app.post("/cartadd/:rentalID&:itemID&:quantity", function (req, res) {
     //retrieve the search word from the parameters
     var rentalID = req.params.rentalID;
     var itemID = req.params.itemID;
+    let quantity = req.params.quantity;
     console.log("rentalid: "+rentalID+" itemid: "+itemID);
     //make connection and config
     var Connection = require('tedious').Connection;
@@ -278,7 +279,7 @@ app.post("/cartadd/:rentalID&:itemID", function (req, res) {
         }
         console.log("Connected in cart");
         //execute statement after the connection
-        executeStatement(res, connection, `EXEC [create_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID};`);
+        executeStatement(res, connection, `EXEC [create_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID}, @Quantity = ${quantity};`);
         return;
     });
     connection.connect();
