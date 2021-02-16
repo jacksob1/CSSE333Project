@@ -420,7 +420,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
     let city = req.params.city;
     let state = req.params.state;
     let zip = req.params.zip;
-    let sign = JSON.stringify(req.body);
+    let sign = req.body;
     let startDate = req.params.startDate;
     let endDate = req.params.endDate;
     let cartID = req.params.cartID;
@@ -433,7 +433,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
             console.log(err);
             process.exit(1);
         }
-        console.log("EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
+        console.log( "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = '"+startDate+"', @newEndDate = '"+endDate+"', @newRenterSignature = "+sign+";");
 
         executeStatement(res, connection, "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = "+startDate+", @newEndDate = "+endDate+", @newRenterSignature = "+sign+";");
         return;
