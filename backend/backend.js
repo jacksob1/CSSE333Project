@@ -8,9 +8,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //rosefire variables
 var RosefireTokenVerifier = require('rosefire-node');
 var rosefire = new RosefireTokenVerifier("5jWWnqqxHHIkZL4SrHbp");
+var Request = require('tedious').Request;
 
 //other stuff
 const logger = require("morgan");
+const { TYPES } = require("tedious");
 app.use(logger('dev')); //helpful info serverside when requests come in
 
 app.use('/static', express.static("public"));
@@ -79,13 +81,12 @@ app.get("/clubmember/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, "SELECT * FROM ClubMember WHERE MemberID = '"+renterID+"';");
+
+        executeClubMember(res, connection, renterID);
         return;
     });
     connection.connect();
 })
-
-
 
 //check to see if a club member exists
 app.post("/delete/:itemID", function (req, res) {
@@ -100,7 +101,8 @@ app.post("/delete/:itemID", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection,`EXEC [delete_Item] @ItemID=${itemID}`);
+
+        executeDelete(res, connection, itemID);
         return;
     });
     connection.connect();
@@ -124,7 +126,8 @@ app.post("/add/:name&:category&:price&:description&:quantity&:uid&:id", function
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, `EXEC [create_Item] @TotalQuantity=${quantity}, @Price=${price}, @Name='${name}', @Description='${description}', @Category='${category}', @Manager='${uid}';`);
+
+        executeAdd(res, connection, name, category, price, description, quantity, uid);
         return;
     });
     connection.connect();
@@ -149,12 +152,12 @@ app.post("/edit/:name&:category&:price&:description&:quantity&:uid&:id", functio
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, `EXEC [update_Item] @newTotalQuantity=${quantity}, @newPrice=${price}, @newName='${name}', @newDescription='${description}', @newCategory='${category}', @newManager='${uid}', @ItemID=${id};`);
+
+        executeEdit(res, connection, name, category, price, description, quantity, uid, id);
         return;
     });
     connection.connect();
 })
-
 
 //create a new club member
 app.post("/clubmemberadd/:renterID&:name", function (req, res) {
@@ -170,7 +173,8 @@ app.post("/clubmemberadd/:renterID&:name", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, "EXEC [create_ClubMember] @MemberID= "+renterID+", @Name = ["+name+"];");
+
+        executeClubMemberAdd(res, connection, renterID, name);
         return;
     });
     connection.connect();
@@ -187,7 +191,8 @@ app.get("/db", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, "SELECT * FROM Item;");
+
+        executeDB(res, connection);
         return;
     });
     connection.connect();
@@ -205,7 +210,8 @@ app.get("/item/:itemID", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        executeStatement(res, connection, `SELECT * FROM Item WHERE Item.ItemID = ${itemID};`);
+
+        executeItem(res, connection, itemID);
         return;
     });
     connection.connect();
@@ -230,8 +236,8 @@ app.get("/search/:search", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [search_Item] @searchWord = '"+ searchword +"';");
+
+        executeSearch(res, connection, searchword);
         return;
     });
     connection.connect();
@@ -253,8 +259,8 @@ app.get("/rentals/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [view_rentals_by_user] @RenterID = "+renterID+";");
+
+        executeRentals(res, connection, renterID);
         return;
     });
     connection.connect();
@@ -278,8 +284,8 @@ app.post("/cartadd/:rentalID&:itemID&:quantity", function (req, res) {
             process.exit(1);
         }
         console.log("Connected in cart");
-        //execute statement after the connection
-        executeStatement(res, connection, `EXEC [create_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID}, @Quantity = ${quantity};`);
+
+        executeCartAdd(res, connection, rentalID, itemID, quantity);
         return;
     });
     connection.connect();
@@ -302,8 +308,8 @@ app.get("/cartremove/:rentalID&:itemID", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, `EXEC [delete_RentedIn] @RentalID = ${rentalID}, @ItemID = ${itemID};`);
+
+        executeCartRemove(res, connection, rentalID, itemID);
         return;
     });
     connection.connect();
@@ -324,8 +330,8 @@ app.get("/makecart/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [create_Rental] @RenterID = "+renterID+";");
+
+        executeMakeCart(res, connection, renterID);
         return;
     });
     connection.connect();
@@ -345,13 +351,12 @@ app.post("/addcategory/:category", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [create_Category] @Name = "+category+";");
+
+        executeAddCategory(res, connection, category);
         return;
     });
     connection.connect();
 })
-
 
 //find id of cart based on uid
 app.get("/cart/:uid", function (req, res) {
@@ -368,13 +373,12 @@ app.get("/cart/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [cart_id] @RenterID = '"+renterID+"';");
+
+        executeCart(res, connection, renterID);
         return;
     });
     connection.connect();
 })
-
 
 //show pending rentals
 app.get("/pending", function (req, res) {
@@ -388,8 +392,8 @@ app.get("/pending", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "SELECT * FROM Rental WHERE ExecutiveSignature is null AND RenterSignature is not null"); // put in after tomorrow "RenterSignature is not null and"
+        
+        executePending(res, connection);
         return;
     });
     connection.connect();
@@ -409,8 +413,8 @@ app.get("/rentalitems/:id", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, "EXEC [view_items_in_rental] @RentalID = "+ id); // put in after tomorrow "RenterSignature is not null and"
+
+        executeRentalItems(res, connection, id);
         return;
     });
     connection.connect();
@@ -430,9 +434,9 @@ app.get("/permissions/:uid", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        //execute statement after the connection
-        executeStatement(res, connection, `EXEC [get_Executive] @ID=${execID}`);
-        
+
+        executePermissions(res, connection, execID);
+        return;
     });
     connection.connect();
 })
@@ -458,7 +462,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
         }
         console.log( "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = '"+startDate+"', @newEndDate = '"+endDate+"', @newRenterSignature = "+sign+";");
 
-        executeStatement(res, connection, `EXEC [update_Rental] @ID = ${cartID}, @newStartDate = '${startDate}', @newEndDate = '${endDate}', @newRenterSignature = ${sign};`);
+        executeSubmitForm(res, connection, cartID, startDate, endDate, sign);
         return;
     });
     connection.connect();
@@ -475,6 +479,741 @@ function executeStatement(res, connection, searchStatement) {
             console.log(err);
         }
     });
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeSubmitForm(res, connection, cartID, startDate, endDate, sign){
+    let data = [];
+
+    //create the request
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [update_Rental] @ID = @cartID, @newStartDate = @startDate, @newEndDate = @endDate, @newRenterSignature = @sign;`, function(err){
+        if(err){
+            console.error(err);
+        }
+    });
+
+    request.addParameter('cartID', TYPES.Int, cartID);
+    request.addParameter('startDate', TYPES.Date, startDate);
+    request.addParameter('endDate', TYPES.Date, endDate);
+    request.addParameter('sign', TYPES.Text, sign);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executePermissions(res, connection, execID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [get_Executive] @ID = @execID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('execID', TYPES.NVarChar, execID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeRentalItems(res, connection, id){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [view_items_in_rental] @RentalID = @id`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('id', TYPES.Int, id);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executePending(res, connection){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`SELECT * FROM Rental WHERE ExecutiveSignature is null AND RenterSignature is not null`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeCart(res, connection, renterID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [cart_id] @RenterID = @renterID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('renterID', TYPES.NVarChar, renterID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeAddCategory(res, connection, category){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_Category] @Name = @category`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('category', TYPES.VarChar, category);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeMakeCart(res, connection, renterID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_Rental] @RenterID = @ID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('ID', TYPES.NVarChar, renterID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeCartRemove(res, connection, rentalID, itemID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [delete_RentedIn] @RentalID = @rentalID, @ItemID = @itemID;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('rentalID', TYPES.Int, rentalID);
+    request.addParameter('itemID', TYPES.Int, itemID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeCartAdd(res, connection, rentalID, itemID, quantity){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_RentedIn] @RentalID = @rentalID, @ItemID = @itemID, @Quantity = @number;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('rentalID', TYPES.Int, rentalID);
+    request.addParameter('itemID', TYPES.Int, itemID);
+    request.addParameter('number', TYPES.Int, quantity);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeRentals(res, connection, renterID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [view_rentals_by_user] @RenterID = @renterID;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('rentalID', TYPES.NVarChar, renterID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeSearch(res, connection, searchword){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [search_Item] @searchWord = @search;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('search', TYPES.VarChar, searchword);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeItem(res, connection, itemID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`SELECT * FROM Item WHERE Item.ItemID = @itemID;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('itemID', TYPES.Int, itemID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeDB(res, connection){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`SELECT * FROM Item;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeClubMemberAdd(res, connection, renterID, name){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_ClubMember] @MemberID = @renterID, @Name = @name;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('renterID', TYPES.NVarChar, renterID);
+    request.addParameter('name', TYPES.VarChar, name);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeEdit(res, connection, name, category, price, description, quantity, uid, id){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [update_Item] @newTotalQuantity = @quantity, @newPrice = @price, @newName = @name, @newDescription = @description, @newCategory = @category, @newManager = @manager, @ItemID = @id;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('quantity', TYPES.Int, quantity);
+    request.addParameter('price', TYPES.Money, price);
+    request.addParameter('name', TYPES.VarChar, name);
+    request.addParameter('description', TYPES.VarChar, description);
+    request.addParameter('category', TYPES.VarChar, category);
+    request.addParameter('manager', TYPES.NVarChar, uid);
+    request.addParameter('id', TYPES.Int, id);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeAdd(res, connection, name, category, price, description, quantity, uid){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_Item] @TotalQuantity = @quantity, @Price = @price, @Name = @name, @Description = @description, @Category = @category, @Manager = @manager;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('quantity', TYPES.Int, quantity);
+    request.addParameter('price', TYPES.Money, price);
+    request.addParameter('name', TYPES.VarChar, name);
+    request.addParameter('description', TYPES.VarChar, description);
+    request.addParameter('category', TYPES.VarChar, category);
+    request.addParameter('manager', TYPES.VarChar, uid);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeDelete(res, connection, itemID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [delete_Item] @ItemID = @itemID;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('itemID', TYPES.Int, itemID);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeClubMember(res, connection, renterID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`SELECT * FROM ClubMember WHERE MemberID = @renterID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('renterID', TYPES.NVarChar, renterID);
 
     //make an array of the columns
     request.on('row', function (columns) {
