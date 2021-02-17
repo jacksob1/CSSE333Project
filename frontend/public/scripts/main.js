@@ -1,5 +1,7 @@
 //const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require("constants");
 
+// const { create } = require("domain");
+
 // const { DocumentProvider } = require("mongoose");
 
 var rhit = rhit || {};
@@ -146,16 +148,16 @@ function main() {
     //load items on cart page
     if (document.querySelector("#cart")) {
         console.log("cart clicked");
-        
-        fetch(apiURLMakeCart + uid).then(
-            response => response.json()
-        ).then((params) => {
+
+        document.querySelector("#cart").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Cart";
-            document.querySelector("#cart").onclick = (event) => {
-                getCartID(uid);
+            document.querySelector("#checkOutButton").style.display = "initial";
+            document.querySelector("#checkOutButton").onclick=(event) => {
+                document.location = "formpage.html";
+                checkOut();
             }
-        }
-        );
+            getCartID(uid);
+        };
     }
 
     //load items on homepage
@@ -255,6 +257,7 @@ function checkOut() {
     console.log("here in checkout");
     document.querySelector("#submitForm").onclick = (params) => {
         console.log("clicked submit");
+        makeCartFromUID(uid);
         storeData();
     }
 }
@@ -673,6 +676,14 @@ function makeCart(itemID, uid, quantity) {
     ).then((data) => {
         console.log("make cart" + data);
         addToCart(itemID, data.ID, quantity);
+    });
+}
+
+function makeCartFromUID(uid) {
+    fetch(apiURLMakeCart + uid).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("make cart" + data);
     });
 }
 
