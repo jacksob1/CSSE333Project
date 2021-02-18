@@ -425,6 +425,24 @@ app.get("/pending", function (req, res) {
     connection.connect();
 })
 
+app.get("/current", function (req, res) {
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        
+        executeCurrent(res, connection);
+        return;
+    });
+    connection.connect();
+})
+
 //search for items with a search word parameter
 app.get("/rentalitems/:id", function (req, res) {
     let id = req.params.id;
@@ -658,11 +676,49 @@ function executeRentalItems(res, connection, id){
     connection.execSql(request);
 }
 
+function executeCurrent(res, connection){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [current_Rentals]`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
 function executePending(res, connection){
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`SELECT * FROM Rental WHERE ExecutiveSignature is null AND RenterSignature is not null`, function(err){
+    request = new Request(`EXEC [pending_Rentals]`, function(err){
         if(err){
             console.log(err);
         }

@@ -21,6 +21,7 @@ apiURLRental = "http://localhost:4000/rentals/";
 apiURLRentalItems = "http://localhost:4000/rentalitems/";
 apiURLPermissions = "http://localhost:4000/permissions/";
 apiURLPending = "http://localhost:4000/pending/";
+apiURLCurrent = "http://localhost:4000/current/";
 apiURLAuth = "http://localhost:4000/auth/";
 apiURLCart = "http://localhost:4000/cart/";
 apiURLAdd = "http://localhost:4000/add/";
@@ -176,6 +177,7 @@ function main() {
         document.querySelector("#execInventory").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
+            document.querySelector("#checkOutButton").style.display = "none";
             let addButton = document.querySelector("#addButton")
             addButton.style.display = "initial";
             addButton.onclick = (event) => {
@@ -347,17 +349,119 @@ function checkPermissions(uid) {
             document.querySelector("#execPendingRentals").style.display = "initial";
             document.querySelector("#execInventory").style.display = "initial";
             document.querySelector("#addButton").style.display = "none";
+            document.querySelector("#execCurrentRentals").style.display = "initial";
             document.querySelector("#execPendingRentals").onclick = (params) => {
 
                 document.querySelector("#addButton").style.display = "none";
+                document.querySelector("#checkOutButton").style.display = "none";
                 document.querySelector(".search-container").style.display = "none";
                 //load pending rentals
                 loadPending();
 
                 console.log("finished");
-            }
+            };
+            document.querySelector("#execCurrentRentals").onclick = (params) => {
+                document.querySelector("#addButton").style.display = "none";
+                document.querySelector("#checkOutButton").style.display = "none";
+                document.querySelector(".search-container").style.display = "none";
+                //load current rentals
+                loadCurrent();
+
+                console.log("done");
+            };
         }
     });
+}
+
+function loadCurrent() {
+    document.querySelector("#rentalsTitle").innerHTML = "Current Rentals";
+    //empty the rentals container
+    $("#rentalsContainer").innerHTML = "";
+    //create a new replacement for the table
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    fetch(apiURLCurrent).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRental");
+            //put the item name in the newCard
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            (function (i) {
+                var id = data[i][0];
+                interiorCard.querySelector(".detailsButton").onclick = (event) => {
+                    loadRentalItemsForRemoval(id);
+                };
+            })(i);
+            interiorCard.querySelector(".description").innerHTML = "ID: " + data[i][0] + ", Renter: " + data[i][3]; //TODO: week 9 do this so click works and detail show
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        //removes the old rentalsContainer and id
+        const oldList = document.querySelector("#rentalsContainer");
+        oldList.removeAttribute("id");
+        //hide the old container and replace with the new list
+        oldList.hidden = true;
+        oldList.parentElement.appendChild(newList);
+        console.log("finished");
+    });
+}
+
+async function loadRentalItemsForRemoval(id) {
+    document.querySelector("#rentalsTitle").innerHTML = "Rental Items";
+    //empty the rentals container
+    $("#rentalsContainer").innerHTML = "";
+    //create a new replacement for the table
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    //request the items with the URL and search word
+    let totalPrice = await fetch(apiURLRentalItems + id).then(
+        response => response.json()
+    ).then((data) => {
+        console.log(data);
+        //loop through the data entering information to the card
+        let total = 0;
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRentalCurrent");
+            //put the item name in the newCard
+            newCard.querySelector(".inventory-listitem").innerHTML = data[i][3];
+
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            (function (i) {
+                var itemID = data[i][0];
+                var rentalID = id;
+                interiorCard.querySelector(".returnButton").onclick = (event) => {
+                    removeItemFromRental(itemID, rentalID);
+                };
+            })(i);
+            total += parseInt(data[i][2]) * parseInt(data[i][7]);
+            interiorCard.querySelector(".description").innerHTML = data[i][4];
+            interiorCard.querySelector(".quantity").innerHTML = "Quantity: " + data[i][7];
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        console.log("finished");
+        return total;
+    });
+    //removes the old rentalsContainer and id
+    const oldList = document.querySelector("#rentalsContainer");
+    oldList.removeAttribute("id");
+    //hide the old container and replace with the new list
+    oldList.hidden = true;
+    oldList.parentElement.appendChild(newList);
+    return totalPrice;
 }
 
 function loadPending() {

@@ -18,7 +18,7 @@ html {
     z-index: 100;
 } */
 
-#execInventory, #execPendingRentals{
+#execInventory, #execPendingRentals, #execCurrentRentals {
     display: none;
 }
 
