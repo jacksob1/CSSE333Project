@@ -328,10 +328,10 @@ function getCartID(uid) {
     console.log("uid is =" + uid);
     fetch(apiURLCart + uid).then(
         response => response.json()
-    ).then((data) => {
+    ).then(async (data) => {
         console.log("data = ", data);
-        loadRentalItems(data[0][0]);
-        document.querySelector("#rentalsTitle").innerHTML = "Cart";
+        let price = await loadRentalItems(data[0][0]);
+        document.querySelector("#rentalsTitle").innerHTML = "Cart             $" + price;
     });
 }
 
@@ -487,18 +487,19 @@ function loadRentals(parameter) {
     oldList.parentElement.appendChild(newList);
 }
 
-function loadRentalItems(id) {
+async function loadRentalItems(id) {
     document.querySelector("#rentalsTitle").innerHTML = "Rental Items";
     //empty the rentals container
     $("#rentalsContainer").innerHTML = "";
     //create a new replacement for the table
     const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
     //request the items with the URL and search word
-    fetch(apiURLRentalItems + id).then(
+    let totalPrice = await fetch(apiURLRentalItems + id).then(
         response => response.json()
     ).then((data) => {
         console.log(data);
         //loop through the data entering information to the card
+        let total = 0;
         for (var i = 0; i < data.length; i++) {
             //select and create templates
             let template = document.querySelector("#cardTemplate");
@@ -515,6 +516,7 @@ function loadRentalItems(id) {
             })(i);
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
+            total += parseInt(data[i][2]) * parseInt(data[i][7]);
             interiorCard.querySelector(".description").innerHTML = data[i][4];
             interiorCard.querySelector(".quantity").innerHTML = "Quantity: " + data[i][7];
             //appent the interior card to the list item
@@ -523,6 +525,7 @@ function loadRentalItems(id) {
             newList.append(newCard);
         }
         console.log("finished");
+        return total;
     });
     //removes the old rentalsContainer and id
     const oldList = document.querySelector("#rentalsContainer");
@@ -530,6 +533,7 @@ function loadRentalItems(id) {
     //hide the old container and replace with the new list
     oldList.hidden = true;
     oldList.parentElement.appendChild(newList);
+    return totalPrice;
 }
 
 function removeItemFromRental(itemID, rentalID) {
