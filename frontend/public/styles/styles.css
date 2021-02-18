@@ -18,16 +18,20 @@ html {
     z-index: 100;
 } */
 
-#execInventory, #execPendingRentals, #execCurrentRentals {
+#execInventory,
+#execPendingRentals,
+#execCurrentRentals {
     display: none;
 }
 
-.inventory-listitem{
+.inventory-listitem {
     text-align: start;
 }
+
 .page-container {
     margin-top: 40px;
 }
+
 .topnav .search-container {
     float: right;
 }
@@ -36,11 +40,11 @@ html {
     display: none;
 }
 
-.description{
+.description {
     margin: 10px;
 }
 
-#addButton{
+#addButton {
     position: fixed;
     bottom: 30px;
     right: 30px;
@@ -89,80 +93,85 @@ html {
     max-width: none;
 }
 
-#mInventoryPage{
+#mInventoryPage {
     text-align: center;
 }
 
 
 /* Form Page */
-#formReviewPage, #formPage, #detailPageCurrent,#detailPageRequest{
-    background-color:white;
+#formReviewPage,
+#formPage,
+#detailPageCurrent,
+#detailPageRequest {
+    background-color: white;
     padding: 50px;
     color: #333333;
 }
 
-#titleRenter{
+#titleRenter {
     color: #333333;
 }
 
-.titleForm{
+.titleForm {
     margin-top: 15px;
-    color:#333333;
+    color: #333333;
     font-variant-caps: all-small-caps;
-    font-size:1.75em;
+    font-size: 1.75em;
 }
 
-.formTitle{
+.formTitle {
     color: #333333;
     margin-left: 40px;
 }
 
-.form2{
+.form2 {
     color: #333333 !important;
 }
 
-.formHeaderLine{
+.formHeaderLine {
     margin-bottom: 50px;
 }
 
-.quantityList > .list-group-item{
+.quantityList>.list-group-item {
     justify-content: center;
 }
-.list-group-item{
+
+.list-group-item {
     color: #333333;
 }
 
-.itemList, .quantityList{
+.itemList,
+.quantityList {
     max-width: none;
     margin: auto;
 }
 
-.listTitle{
+.listTitle {
     font-variant-caps: all-small-caps;
     font-size: 1.5em;
 }
 
-#formNav{
+#formNav {
     background-color: #333333;
 }
 
-#signBox{
+#signBox {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-#sigBox{
+#sigBox {
     width: min-content;
 }
 
-.btn{
+.btn {
     margin: 10px;
 }
 
 /* Managment Homepage */
-.navButton{
+.navButton {
     position: sticky;
     color: white;
     background: #222222;
@@ -175,14 +184,14 @@ html {
     margin-top: 10px;
 }
 
-#buttonContainer{
-    margin:auto;
+#buttonContainer {
+    margin: auto;
     margin-top: 40vh;
 }
 
 
 /* Rentals Home */
-#bg > #rentalsImage{
+#bg>#rentalsImage {
     min-width: 70%;
     min-height: 70%;
 }
@@ -203,23 +212,23 @@ html {
     padding: 20px;
 }
 
-.description{
+.description {
     text-align: left;
 }
 
-#checkOutButton{
+#checkOutButton {
     display: none;
 }
 
 /* Background image stuff */
 
-#loginPage{
+#loginPage {
     padding: 70px 20px;
     text-align: center;
     margin-top: 50px;
 }
 
-#rosefireButton{
+#rosefireButton {
     border-color: white;
     border-style: solid;
     background-color: cadetblue;
@@ -265,7 +274,7 @@ html {
     filter: grayscale(50%);
 }
 
-#titleLogin{
+#titleLogin {
     position: relative;
     z-index: 99;
     font-size: 36pt;
@@ -275,9 +284,74 @@ html {
     text-shadow: #212121;
 }
 
-#rosefireButton{
+#rosefireButton {
     font-size: x-large;
     color: white;
+}
+
+/* dropdown for nav bar https://www.w3schools.com/howto/howto_css_dropdown.asp#:~:text=Example%20Explained,dropdown%20menu%20correctly%20with%20CSS. */
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+    z-index: 99;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+    background-color: #888888;
+}
+
+.dropdown-content {
+    display: none;
+    position: relative;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+    float: none;
+    position: relative;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    z-index: 99;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* Get the header to scroll correctly */
@@ -286,24 +360,24 @@ html {
     padding: 10px 16px;
     background: #555;
     color: #f1f1f1;
-  }
-  
-  /* Page content */
-  .content {
+}
+
+/* Page content */
+.content {
     padding: 16px;
-  }
-  
-  /* The sticky class is added to the header with JS when it reaches its scroll position */
-  .sticky {
+}
+
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
     position: fixed;
     top: 0;
     width: 100%
-  }
-  
-  /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
-  .sticky + .content {
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+.sticky+.content {
     padding-top: 102px;
-  }
+}
 
 /* Search Bar from https://www.w3schools.com/howto/howto_css_searchbar.asp */
 
@@ -356,7 +430,7 @@ html {
     font-size: 17px;
     border: none;
     cursor: pointer;
-  }
+}
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {

@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
-  <link rel="stylesheet" href="styles/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet" href="styles/styles.css">
   <title>Inventory</title>
 </head>
 
@@ -18,11 +18,19 @@
     <a id="inventory" href="#inventory">Inventory</a>
     <a id="cart" href="#cart">Cart</a>
     <a id="signin" href="#signin">Sign In</a>
-    <a id="execPendingRentals" href="#pending-rentals">Pending Rentals</a>
-    <a id="execCurrentRentals" href="#current-rentals">Current Rentals</a>
-    <a id="execInventory" href="#exec_inventory">Manage Inventory</a>
-    <!-- <a id="managePermissions" href="#manage-permissions">Permissions</a> -->
-    <!-- Search Entry Field -->
+    <!-- dropdown content -->
+    <div class="dropdown">
+      <button class="dropbtn">Management
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a id="execPendingRentals" href="#pending-rentals">Pending Rentals</a>
+        <a id="execCurrentRentals" href="#current-rentals">Current Rentals</a>
+        <a id="execInventory" href="#exec_inventory">Inventory</a>
+        <a id="managePermissions" href="#manage-permissions">Permissions</a>
+      </div>
+    </div>
+      <!-- Search Entry Field -->
     <div class="search-container">
       <button id="search-button" type="submit"><i class="fa fa-search"></i></button>
       <input id="search" type="text" placeholder="Search.." name="search">
