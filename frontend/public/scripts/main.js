@@ -16,6 +16,7 @@ rhit.FB_END = "endDate";
 rhit.FB_CITY = "city";
 
 apiURL = "http://localhost:4000/search/";
+apiURLSearchCategory = "http://localhost:4000/categorysearch/";
 apiURLRental = "http://localhost:4000/rentals/";
 apiURLRentalItems = "http://localhost:4000/rentalitems/";
 apiURLPermissions = "http://localhost:4000/permissions/";
@@ -403,8 +404,10 @@ function loadPending() {
 // simple search to get searchword and request the entries
 function search(isManagement) {
     let searchword = document.querySelector("#search").value;
+    let isCategorySearch = $("#category").is(":checked");
+    console.log("Category Search: " + isCategorySearch);
     console.log(searchword);
-    loadEntries(searchword, isManagement);
+    loadEntries(searchword, isCategorySearch, isManagement);
 }
 
 //sign in using rosefire
@@ -537,7 +540,7 @@ function removeItemFromRental(itemID, rentalID) {
     });
 }
 
-function loadEntries(string, isManagement) {
+function loadEntries(string, isCategorySearch, isManagement) {
     console.log("got here\n");
     //if the search word is empty, use the default string
     if (string == "") {
@@ -548,7 +551,13 @@ function loadEntries(string, isManagement) {
     //create a new replacement for the table
     const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
     //request the items with the URL and search word
-    fetch(apiURL + string).then(
+    let url = apiURL;
+
+    if(isCategorySearch){
+        url = apiURLSearchCategory;
+    }
+
+    fetch(url + string).then(
         response => response.json()
     ).then((data) => {
         console.log("response??\n");

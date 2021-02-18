@@ -243,6 +243,32 @@ app.get("/search/:search", function (req, res) {
     connection.connect();
 })
 
+//search for items in a category with a search word parameter
+app.get("/categorysearch/:search", function (req, res) {
+    //retrieve the search word from the parameters
+    let searchword = req.params.search;
+    //set to empty string if only default provided
+    if (searchword == "DEFAULT_SEARCH_PARAM") {
+        searchword = "";
+    }
+    console.log(searchword);
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+
+        executeSearchCategory(res, connection, searchword);
+        return;
+    });
+    connection.connect();
+})
+
 
 //search for items with a search word parameter
 app.get("/rentals/:uid", function (req, res) {
@@ -918,6 +944,46 @@ function executeSearch(res, connection, searchword){
 
     var Request = require('tedious').Request;
     request = new Request(`EXEC [search_Item] @searchWord = @search;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('search', TYPES.VarChar, searchword);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeSearchCategory(res, connection, searchword){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [search_Items_by_Category] @searchWord = @search;`, function(err){
         if(err){
             console.log(err);
         }
