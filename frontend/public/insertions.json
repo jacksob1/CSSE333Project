@@ -1,0 +1,775 @@
+{
+    "Categories": [
+        {
+            "name":"Chalk Bags"
+        },
+        {
+            "name":"Chalk"
+        },
+        {
+            "name":"Harnesses"
+        },
+        {
+            "name":"Cooking"
+        },
+        {
+            "name":"Gear"
+        },
+        {
+            "name":"Shoes"
+        },
+        {
+            "name":"Miscellaneous"
+        },
+        {
+            "name":"Camping"
+        },
+        {
+            "name":"Training"
+        },
+        {
+            "name":"Guidebooks"
+        }
+    ],
+    "Club Members": [
+        {
+            "name": "Elliya Sorenson",
+            "memberID": "sorensej"
+        }
+    ],
+    "Executives": [
+        {
+            "id": "sorensej"
+        }
+    ],
+    "Items": [
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Orange Chalk Bag",
+            "description": "Chalk Bag that is orange.",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Blue Chalk Bag",
+            "description": "Chalk Bag that is blue.",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Red Chalk Bag",
+            "description": "Chalk Bag that is red.",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Black Chalk Bag",
+            "description": "Chalk Bag that is black.",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 10.00,
+            "name":"Petzl Liquid Chalk",
+            "description": "Liquid chalk",
+            "category": "Chalk",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Metolius Chalk Sock",
+            "description": "Sock full of chalk",
+            "category": "Chalk",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 50.00,
+            "name":"Petzl Corax",
+            "description": "Pretzel harness",
+            "category": "Harnesses",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 60.00,
+            "name":"Rock & Lock",
+            "description": "Rocking and Locking Harness",
+            "category": "Harnesses",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 75.00,
+            "name":"Black Diamond Momentum",
+            "description": "Stops your momentum",
+            "category": "Harnesses",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 85.00,
+            "name":"Black Diamond Black/Grey",
+            "description": "Dark and sleek to keep you clean",
+            "category": "Harnesses",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 55.00,
+            "name":"MSR Maintenance Kit",
+            "description": "Fix it quick",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 78.00,
+            "name":"Coleman Portable Stove",
+            "description": "Cook on the go",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 53.00,
+            "name":"Primus Portable Stove",
+            "description": "Cooking at its prime",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 150.00,
+            "name":"Coleman Dual Fuel",
+            "description": "Cooks twice as much",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Charcoal Starter",
+            "description": "We started the fire",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 15.00,
+            "name":"MSR Fuel Bottle",
+            "description": "Like G-Fuel but fiery",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"MSR Blend Fuel",
+            "description": "Blended fires",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 57.00,
+            "name":"Dragonfly Stove",
+            "description": "Cook with dragon's fire",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 25.00,
+            "name":"Propane Tank Lighter",
+            "description": "Gaseous flames",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 5.00,
+            "name":"Aluminum Foil",
+            "description": "Make sure to protect yourself from aliens",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 10.00,
+            "name":"Cooking Pan",
+            "description": "Cook like a GOAT",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 56.00,
+            "name":"Cooking Set",
+            "description": "Cooking essentials",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Coffee Boiler Cup",
+            "description": "For hot coffee",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 30.00,
+            "name":"Big Propane Tank",
+            "description": "When a small one won't work",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 50.00,
+            "name":"Big Propane Tank Cooker",
+            "description": "For when you get the Big Propane Tank",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Big Pot",
+            "description": "Not a drug",
+            "category": "Cooking",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 50.00,
+            "name":"Long Blue Black Diamond Quickdraw",
+            "description": "Save these for high noon",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 40.00,
+            "name":"Short Blue Black Diamond Quickdraw",
+            "description": "When the long ones are too long",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 55.00,
+            "name":"Orange Climb X Quickdraw",
+            "description": "When high noon gets spicy",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 7,
+            "price": 65.00,
+            "name":"Red Black Diamond Quickdraw",
+            "description": "When orange isn't spicy enough",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 500.00,
+            "name":"Maroon & White Metolius Quickdraw",
+            "description": "When you got a duel at noon but gotta be fancy",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 57.00,
+            "name":"Maroon Metolius Quickdraw",
+            "description": "When you couldn't afford the ones with white",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 13,
+            "price": 3.00,
+            "name":"Non-Locking Carabiner",
+            "description": "When you don't like commitment",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 6,
+            "price": 5.00,
+            "name":"Locking Carabiner",
+            "description": "When you feel like settling down",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 8.00,
+            "name":"Black Diammond Super 8",
+            "description": "Like a Motel 6 but cooler",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 5.00,
+            "name":"Black Diamond ATC",
+            "description": "They thought the ABCs were easy",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Petzl Reversino",
+            "description": "The reverse pretzel",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 3.00,
+            "name":"Petzl Tibloc",
+            "description": "Another pretzel",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Kong Frog",
+            "description": "We couldn't find the ape",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Red Tied Runner",
+            "description": "Because running untied was too easy",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 5.00,
+            "name":"Blue Sewn Runner",
+            "description": "Sad grandma needed exercise",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 5.00,
+            "name":"Yellow Sewn Runner",
+            "description": "Optimistic grandma needed exercise",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Short Red Sewn Runner",
+            "description": "Grandma became a ginger",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Long Red Sewn Runner",
+            "description": "Grandma ran cross country",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 6.00,
+            "name":"Daisy Chain",
+            "description": "Flower Power",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 2.00,
+            "name":"Quick Link",
+            "description": "For Zelda speed runs",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 51.00,
+            "name":"Crash Pad",
+            "description": "Not from Fortnite",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 4,
+            "price": 5.00,
+            "name":"Gri-Gri",
+            "description": "Baby Groots first words",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 15.00,
+            "name":"Yellow Sling",
+            "description": "When you break your arm but have hope",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 15.00,
+            "name":"Orange Sling",
+            "description": "When your optimism is spicy",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 12,
+            "price": 53.00,
+            "name":"Hotforge Quickdraw",
+            "description": "When the smith joins the duel",
+            "category": "Gear",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Orange Chalk Bag",
+            "description": "Chalk Bag that is orange.",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 7,
+            "price": 35.00,
+            "name":"Laced 5.10",
+            "description": "The upgrade from 5.0",
+            "category": "Shoes",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 45.00,
+            "name":"Laced Evolve",
+            "description": "The next step in evolution",
+            "category": "Shoes",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 40.00,
+            "name":"Velcro Evolve",
+            "description": "When you are too lazy to tie them",
+            "category": "Shoes",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 25.00,
+            "name":"La Sportive Taratulaces",
+            "description": "Feeliing sporty?",
+            "category": "Shoes",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 15.00,
+            "name":"Laser Pointer",
+            "description": "Don't shoot down airplanes",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Gibbon Slackline",
+            "description": "When you need more rope",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 1.00,
+            "name":"5 Gallon Bucket",
+            "description": "For drums obviously",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 7,
+            "price": 5.00,
+            "name":"Red Team Shirts",
+            "description": "Go Team Red!",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 7,
+            "price": 5.00,
+            "name":"Grey Team Shirts",
+            "description": "Go Team Grey!",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Water shield spray",
+            "description": "Gotta protect the water",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 3,
+            "price": 2.00,
+            "name":"Strap",
+            "description": "Not sure what these are for",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 1.00,
+            "name":"Bag of Various Ribbon",
+            "description": "To wrap presents with",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 9.00,
+            "name":"Box of Miscellaneous Screws, Batteries, and Stakes",
+            "description": "Junk drawer in a box",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Orange Slackline",
+            "description": "When you need more spicy rope",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 2.00,
+            "name":"Cam cleaner",
+            "description": "Can't have fuzzy images",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 3.00,
+            "name":"Metolius Rope Bag",
+            "description": "I'm pretty sure a metal rope is a chain",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 10.00,
+            "name":"Metolius Backpack",
+            "description": "This might get heavy",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 9001,
+            "price": 5.00,
+            "name":"Old Shirt",
+            "description": "There are Lots",
+            "category": "Miscellaneous",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 3.00,
+            "name":"Folding Stool",
+            "description": "The cool version of a folding chair",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Orange Eno",
+            "description": "Spicy Emo",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 5.00,
+            "name":"Red Eno",
+            "description": "Emo for gingers",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 10,
+            "price": 25.00,
+            "name":"Sleeping Bag",
+            "description": "Its a nap sack",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 6,
+            "price": 105.00,
+            "name":"Tent",
+            "description": "For roughing it",
+            "category": "Chalk Bags",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 10,
+            "price": 5.00,
+            "name":"Sleeping Pad",
+            "description": "For not so much roughing it",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 4,
+            "price": 5.00,
+            "name":"Tarp",
+            "description": "To make a tent when you don't have money",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 15.00,
+            "name":"Folding Chair",
+            "description": "Take a seat",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 9001,
+            "price": 3.00,
+            "name":"Thin Clear Tarp",
+            "description": "When you need windos for your cheap tent",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 14,
+            "price": 5.00,
+            "name":"Headlamp",
+            "description": "So you can see",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 15.00,
+            "name":"Lantern",
+            "description": "To light the way",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 50.00,
+            "name":"Camelback",
+            "description": "To survive the desert",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 5,
+            "price": 5.00,
+            "name":"Flashlight",
+            "description": "To observe surroundings",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 57.00,
+            "name":"First Aid Kit",
+            "description": "Mobile doctor unit",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 1.00,
+            "name":"Sam Splint",
+            "description": "For Sam's broken leg",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 10,
+            "price": 1.00,
+            "name":"Tent Stake",
+            "description": "The tastiest part of the tent",
+            "category": "Camping",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 2.00,
+            "name":"Metolius Rock Rings",
+            "description": "Marriage in the stone age",
+            "category": "Training",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 3.00,
+            "name":"Hangboard",
+            "description": "Like a reverse hoverboard",
+            "category": "Training",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 15.00,
+            "name":"Red River Gorge North",
+            "description": "Because we don't like the south",
+            "category": "Guidebooks",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 1,
+            "price": 15.00,
+            "name":"Miller Fork Climbing",
+            "description": "Because we don't climb spoons",
+            "category": "Guidebooks",
+            "manager": "sorensej"
+        },
+        {
+            "quantity": 2,
+            "price": 15.00,
+            "name":"Red River Gorge South",
+            "description": "Because we don't like the north",
+            "category": "Guidebooks",
+            "manager": "sorensej"
+        }
+    ]
+}
