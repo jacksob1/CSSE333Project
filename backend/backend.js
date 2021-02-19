@@ -3,7 +3,9 @@ var bodyParser = require('body-parser');
 var app = express();
 var cors = require("cors");
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 //rosefire variables
 var RosefireTokenVerifier = require('rosefire-node');
@@ -12,7 +14,9 @@ var Request = require('tedious').Request;
 
 //other stuff
 const logger = require("morgan");
-const { TYPES } = require("tedious");
+const {
+    TYPES
+} = require("tedious");
 // const { request } = require("express");
 app.use(logger('dev')); //helpful info serverside when requests come in
 
@@ -26,26 +30,26 @@ app.get("/main", function (req, res) {
 app.post('/auth', function (req, res) {
     var token = req.headers.authorization;
     if (!token) {
-      res.status(401).json({
-        error: 'Not authorized!'
-      });
-      return;
+        res.status(401).json({
+            error: 'Not authorized!'
+        });
+        return;
     }
     console.log("in post  " + token);
-    rosefire.verify(token, function(err, authData) {
-      if (err) {
-        res.status(401).json({
-          error: 'Not authorized!'
-        });
-      } else {
-        console.log(authData.username); // rockwotj
-        console.log(authData.issued_at); // <Date Object of issued time> 
-        console.log(authData.group); // STUDENT (Only there if options asked)
-        console.log(authData.expires) // <Date Object> (Only there if options asked)
-        res.json(authData);
-      }
+    rosefire.verify(token, function (err, authData) {
+        if (err) {
+            res.status(401).json({
+                error: 'Not authorized!'
+            });
+        } else {
+            console.log(authData.username); // rockwotj
+            console.log(authData.issued_at); // <Date Object of issued time> 
+            console.log(authData.group); // STUDENT (Only there if options asked)
+            console.log(authData.expires) // <Date Object> (Only there if options asked)
+            res.json(authData);
+        }
     });
-  });  
+});
 
 //make the configuration to send to the connection
 function makeConfig() {
@@ -57,7 +61,7 @@ function makeConfig() {
             type: 'default',
             options: {
                 userName: `${username}`,
-                password: `${pass}` 
+                password: `${pass}`
             }
         },
         options: {
@@ -75,7 +79,7 @@ app.get("/clubmember/:uid", function (req, res) {
     var Connection = require('tedious').Connection;
     var config = makeConfig();
     var connection = new Connection(config);
-    console.log("uid in app.get ",renterID);
+    console.log("uid in app.get ", renterID);
     connection.on('connect', function (err) {
         // If no error, then good to proceed.
         if (err) {
@@ -319,7 +323,7 @@ app.post("/cartadd/:rentalID&:itemID&:quantity", function (req, res) {
     var rentalID = req.params.rentalID;
     var itemID = req.params.itemID;
     let quantity = req.params.quantity;
-    console.log("rentalid: "+rentalID+" itemid: "+itemID);
+    console.log("rentalid: " + rentalID + " itemid: " + itemID);
     //make connection and config
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -344,7 +348,7 @@ app.get("/cartremove/:rentalID&:itemID", function (req, res) {
     //retrieve the search word from the parameters
     var rentalID = req.params.rentalID;
     var itemID = req.params.itemID;
-    console.log("rentalid: "+rentalID+" itemid: "+itemID);
+    console.log("rentalid: " + rentalID + " itemid: " + itemID);
     //make connection and config
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -451,12 +455,12 @@ app.post("/deleteexecutive/:id&:uid", function (req, res) {
 })
 
 
-function executeAddExec(res, connection, id, uid){
+function executeAddExec(res, connection, id, uid) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_Executive] @ID = @execID, @UserID = @uid`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_Executive] @ID = @execID, @UserID = @uid`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -493,12 +497,12 @@ function executeAddExec(res, connection, id, uid){
 }
 
 
-function executeDeleteExec(res, connection, id, uid){
+function executeDeleteExec(res, connection, id, uid) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [delete_Executive] @ID = @execID, @UserID = @uid`, function(err){
-        if(err){
+    request = new Request(`EXEC [delete_Executive] @ID = @execID, @UserID = @uid`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -538,7 +542,7 @@ function executeDeleteExec(res, connection, id, uid){
 app.get("/cart/:uid", function (req, res) {
     //retrieve the search word from the parameters
     let renterID = req.params.uid;
-    console.log("renter ID is "+renterID);
+    console.log("renter ID is " + renterID);
     //make connection and config
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -568,7 +572,7 @@ app.get("/pending", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        
+
         executePending(res, connection);
         return;
     });
@@ -586,7 +590,7 @@ app.get("/current", function (req, res) {
             console.log(err);
             process.exit(1);
         }
-        
+
         executeCurrent(res, connection);
         return;
     });
@@ -635,12 +639,12 @@ app.get("/permissions/:uid", function (req, res) {
     connection.connect();
 })
 
-app.get("/getallexec", function(req,res){
+app.get("/getallexec", function (req, res) {
     var Connection = require('tedious').Connection;
     var config = makeConfig();
     var connection = new Connection(config);
-    connection.on('connect', function(err){
-        if(err){
+    connection.on('connect', function (err) {
+        if (err) {
             console.log(err);
             process.exit(1);
         }
@@ -650,7 +654,7 @@ app.get("/getallexec", function(req,res){
     connection.connect();
 })
 
-app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cartID", function(req, res){
+app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cartID", function (req, res) {
     let name = req.params.name;
     let address = req.params.address;
     let city = req.params.city;
@@ -664,12 +668,12 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
     var Connection = require('tedious').Connection;
     var config = makeConfig();
     var connection = new Connection(config);
-    connection.on('connect', function(err){
-        if(err){
+    connection.on('connect', function (err) {
+        if (err) {
             console.log(err);
             process.exit(1);
         }
-        console.log( "EXEC [update_Rental] @ID = "+cartID+", @newStartDate = '"+startDate+"', @newEndDate = '"+endDate+"', @newRenterSignature = "+sign+";");
+        console.log("EXEC [update_Rental] @ID = " + cartID + ", @newStartDate = '" + startDate + "', @newEndDate = '" + endDate + "', @newRenterSignature = " + sign + ";");
 
         executeSubmitForm(res, connection, cartID, startDate, endDate, sign);
         return;
@@ -677,7 +681,7 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
     connection.connect();
 })
 
-app.get("/getinsertions", function(req, res){
+app.get("/getinsertions", function (req, res) {
     var insertions = require('../frontend/public/insertions.json');
 
     res.send(insertions);
@@ -723,13 +727,13 @@ function executeStatement(res, connection, searchStatement) {
     connection.execSql(request);
 }
 
-function executeSubmitForm(res, connection, cartID, startDate, endDate, sign){
+function executeSubmitForm(res, connection, cartID, startDate, endDate, sign) {
     let data = [];
 
     //create the request
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [update_Rental] @ID = @cartID, @newStartDate = @startDate, @newEndDate = @endDate, @newRenterSignature = @sign;`, function(err){
-        if(err){
+    request = new Request(`EXEC [update_Rental] @ID = @cartID, @newStartDate = @startDate, @newEndDate = @endDate, @newRenterSignature = @sign;`, function (err) {
+        if (err) {
             console.error(err);
         }
     });
@@ -767,12 +771,12 @@ function executeSubmitForm(res, connection, cartID, startDate, endDate, sign){
     connection.execSql(request);
 }
 
-function executePermissions(res, connection, execID){
+function executePermissions(res, connection, execID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [get_Executive] @ID = @execID`, function(err){
-        if(err){
+    request = new Request(`EXEC [get_Executive] @ID = @execID`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -807,12 +811,12 @@ function executePermissions(res, connection, execID){
     connection.execSql(request);
 }
 
-function executeRentalItems(res, connection, id){
+function executeRentalItems(res, connection, id) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [view_items_in_rental] @RentalID = @id`, function(err){
-        if(err){
+    request = new Request(`EXEC [view_items_in_rental] @RentalID = @id`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -847,12 +851,12 @@ function executeRentalItems(res, connection, id){
     connection.execSql(request);
 }
 
-function executeCurrent(res, connection){
+function executeCurrent(res, connection) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [current_Rentals]`, function(err){
-        if(err){
+    request = new Request(`EXEC [current_Rentals]`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -885,12 +889,12 @@ function executeCurrent(res, connection){
     connection.execSql(request);
 }
 
-function executePending(res, connection){
+function executePending(res, connection) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [pending_Rentals]`, function(err){
-        if(err){
+    request = new Request(`EXEC [pending_Rentals]`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -923,12 +927,12 @@ function executePending(res, connection){
     connection.execSql(request);
 }
 
-function executeCart(res, connection, renterID){
+function executeCart(res, connection, renterID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [cart_id] @RenterID = @renterID`, function(err){
-        if(err){
+    request = new Request(`EXEC [cart_id] @RenterID = @renterID`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -963,12 +967,12 @@ function executeCart(res, connection, renterID){
     connection.execSql(request);
 }
 
-function executeAddCategory(res, connection, category){
+function executeAddCategory(res, connection, category) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_Category] @Name = @category`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_Category] @Name = @category`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1003,12 +1007,12 @@ function executeAddCategory(res, connection, category){
     connection.execSql(request);
 }
 
-function executeMakeCart(res, connection, renterID){
+function executeMakeCart(res, connection, renterID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_Rental] @RenterID = @ID`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_Rental] @RenterID = @ID`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1043,12 +1047,12 @@ function executeMakeCart(res, connection, renterID){
     connection.execSql(request);
 }
 
-function executeCartRemove(res, connection, rentalID, itemID){
+function executeCartRemove(res, connection, rentalID, itemID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [delete_RentedIn] @RentalID = @rentalID, @ItemID = @itemID;`, function(err){
-        if(err){
+    request = new Request(`EXEC [delete_RentedIn] @RentalID = @rentalID, @ItemID = @itemID;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1084,12 +1088,13 @@ function executeCartRemove(res, connection, rentalID, itemID){
     connection.execSql(request);
 }
 
-function executeCartAdd(res, connection, rentalID, itemID, quantity){
+function executeCartAdd(res, connection, rentalID, itemID, quantity) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_RentedIn] @RentalID = @rentalID, @ItemID = @itemID, @Quantity = @number;`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_RentedIn] @RentalID = @rentalID, @ItemID = @itemID, @Quantity = @number;`, function (err) {
+        if (err) {
+            data[0] = "Quantity is greater than the items available";
             console.log(err);
         }
     });
@@ -1126,12 +1131,12 @@ function executeCartAdd(res, connection, rentalID, itemID, quantity){
     connection.execSql(request);
 }
 
-function executeAddExecSig(res, connection, signature, rentalID){
+function executeAddExecSig(res, connection, signature, rentalID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [update_rental] @ID = @rentalID, @newExecutiveSignature = @signature;`, function(err){
-        if(err){
+    request = new Request(`EXEC [update_rental] @ID = @rentalID, @newExecutiveSignature = @signature;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1167,12 +1172,12 @@ function executeAddExecSig(res, connection, signature, rentalID){
     connection.execSql(request);
 }
 
-function executeRentals(res, connection, renterID){
+function executeRentals(res, connection, renterID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [view_rentals_by_user] @RenterID = @renterID;`, function(err){
-        if(err){
+    request = new Request(`EXEC [view_rentals_by_user] @RenterID = @renterID;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1207,12 +1212,12 @@ function executeRentals(res, connection, renterID){
     connection.execSql(request);
 }
 
-function executeSearch(res, connection, searchword){
+function executeSearch(res, connection, searchword) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [search_Item] @searchWord = @search;`, function(err){
-        if(err){
+    request = new Request(`EXEC [search_Item] @searchWord = @search;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1247,12 +1252,12 @@ function executeSearch(res, connection, searchword){
     connection.execSql(request);
 }
 
-function executeSearchCategory(res, connection, searchword){
+function executeSearchCategory(res, connection, searchword) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [search_Items_by_Category] @searchWord = @search;`, function(err){
-        if(err){
+    request = new Request(`EXEC [search_Items_by_Category] @searchWord = @search;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1287,12 +1292,12 @@ function executeSearchCategory(res, connection, searchword){
     connection.execSql(request);
 }
 
-function executeItem(res, connection, itemID){
+function executeItem(res, connection, itemID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`SELECT * FROM Item WHERE Item.ItemID = @itemID;`, function(err){
-        if(err){
+    request = new Request(`SELECT * FROM Item WHERE Item.ItemID = @itemID;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1327,12 +1332,12 @@ function executeItem(res, connection, itemID){
     connection.execSql(request);
 }
 
-function executeDB(res, connection){
+function executeDB(res, connection) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`SELECT * FROM Item;`, function(err){
-        if(err){
+    request = new Request(`SELECT * FROM Item;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1365,12 +1370,12 @@ function executeDB(res, connection){
     connection.execSql(request);
 }
 
-function executeClubMemberAdd(res, connection, renterID, name){
+function executeClubMemberAdd(res, connection, renterID, name) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_ClubMember] @MemberID = @renterID, @Name = @name;`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_ClubMember] @MemberID = @renterID, @Name = @name;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1406,12 +1411,12 @@ function executeClubMemberAdd(res, connection, renterID, name){
     connection.execSql(request);
 }
 
-function executeEdit(res, connection, name, category, price, description, quantity, uid, id){
+function executeEdit(res, connection, name, category, price, description, quantity, uid, id) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [update_Item] @newTotalQuantity = @quantity, @newPrice = @price, @newName = @name, @newDescription = @description, @newCategory = @category, @newManager = @manager, @ItemID = @id;`, function(err){
-        if(err){
+    request = new Request(`EXEC [update_Item] @newTotalQuantity = @quantity, @newPrice = @price, @newName = @name, @newDescription = @description, @newCategory = @category, @newManager = @manager, @ItemID = @id;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1452,12 +1457,12 @@ function executeEdit(res, connection, name, category, price, description, quanti
     connection.execSql(request);
 }
 
-function executeAdd(res, connection, name, category, price, description, quantity, uid){
+function executeAdd(res, connection, name, category, price, description, quantity, uid) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_Item] @TotalQuantity = @quantity, @Price = @price, @Name = @name, @Description = @description, @Category = @category, @Manager = @manager;`, function(err){
-        if(err){
+    request = new Request(`EXEC [create_Item] @TotalQuantity = @quantity, @Price = @price, @Name = @name, @Description = @description, @Category = @category, @Manager = @manager;`, function (err) {
+        if (err) {
             console.log(err);
         }
     });
@@ -1497,13 +1502,14 @@ function executeAdd(res, connection, name, category, price, description, quantit
     connection.execSql(request);
 }
 
-function executeDelete(res, connection, itemID){
+function executeDelete(res, connection, itemID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [delete_Item] @ItemID = @itemID;`, function(err){
-        if(err){
+    request = new Request(`EXEC [delete_Item] @ItemID = @itemID;`, function (err) {
+        if (err) {
             console.log(err);
+            data[0]="Cannot Delete Items in Use.";
         }
     });
 
@@ -1537,12 +1543,12 @@ function executeDelete(res, connection, itemID){
     connection.execSql(request);
 }
 
-function executeClubMember(res, connection, renterID){
+function executeClubMember(res, connection, renterID) {
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`SELECT * FROM ClubMember WHERE MemberID = @renterID`, function(err){
-        if(err){
+    request = new Request(`SELECT * FROM ClubMember WHERE MemberID = @renterID`, function (err) {
+        if (err) {
             console.log(err);
         }
     });

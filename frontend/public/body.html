@@ -26,7 +26,7 @@
   <!--[if IE]>
   <script src="js/excanvas.js"></script>
   <![endif]-->
-  
+
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <!-- <script src="scripts/jquery.min.js"></script> -->
@@ -217,64 +217,106 @@
     </div>
   </div>
 
-    <!-- Create Exec Modal -->
-    <div class="modal fade" id="createExecDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Executive:</h5>
+  <!-- Create Exec Modal -->
+  <div class="modal fade" id="createExecDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Executive:</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Executive username">
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="inputName">Name:</label>
-              <input type="text" class="form-control" id="inputName" placeholder="Executive username">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
-            <button id="addExecButton" type="button" data-dismiss="modal" class="btn btn-primary">ADD</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="addExecButton" type="button" data-dismiss="modal" class="btn btn-primary">ADD</button>
         </div>
       </div>
     </div>
-  
+  </div>
 
-
-    <!-- Display details Modal -->
-    <div class="modal fade" id="displayDetailsDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Item Details</h5>
+  <!-- Delete Category Modal -->
+  <div class="modal fade" id="deleteCategoryDialog" tabindex="-1" aria-labelledby="Delete category dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Category:</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Category name">
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="inputName">Item Name:</label>
-              <input type="text" class="form-control" id="inputName" placeholder="Item name" disabled>
-            </div>
-            <div class="form-group">
-              <label for="inputCost">Item Cost:</label>
-              <input type="text" class="form-control" id="inputCost" placeholder="Item cost" disabled>
-            </div>
-            <!-- <div class="form-group">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="deleteCategoryButton" type="button" data-dismiss="modal" class="btn btn-primary">ADD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Category Modal -->
+  <div class="modal fade" id="editCategoryDialog" tabindex="-1" aria-labelledby="Edit category dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Cateogory:</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Category name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="editCategoryButton" type="button" data-dismiss="modal" class="btn btn-primary">ADD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Display details Modal -->
+  <div class="modal fade" id="displayDetailsDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Item Details</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Item Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Item name" disabled>
+          </div>
+          <div class="form-group">
+            <label for="inputCost">Item Cost:</label>
+            <input type="text" class="form-control" id="inputCost" placeholder="Item cost" disabled>
+          </div>
+          <!-- <div class="form-group">
               <label for="inputRentedItems">Rented Items:</label>
               <input type="text" class="form-control" id="inputRentedItems" placeholder="Rented Items">
             </div> -->
-            <div class="form-group">
-              <label for="inputTotal">Available Items:</label>
-              <input type="text" class="form-control" id="inputTotal" placeholder="Total Items" disabled>
-            </div>
-            <div class="form-group">
-              <label for="inputDescription">Item Description:</label>
-              <input type="text" class="form-control" id="inputDescription" placeholder="Item Description" disabled>
-            </div>
+          <div class="form-group">
+            <label for="inputTotal">Available Items:</label>
+            <input type="text" class="form-control" id="inputTotal" placeholder="Total Items" disabled>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">DONE</button>
+          <div class="form-group">
+            <label for="inputDescription">Item Description:</label>
+            <input type="text" class="form-control" id="inputDescription" placeholder="Item Description" disabled>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">DONE</button>
         </div>
       </div>
     </div>
+  </div>
 
   <!--Sign Modal -->
   <div class="modal fade" id="signDialog" tabindex="-1" aria-labelledby="Sign rental dialog" aria-hidden="true">
@@ -340,7 +382,8 @@
   </div>
 
   <!--Select Edit or Delete Category Modal-->
-  <div class="modal fade" id="editCategoryDialogOptions" tabindex="-1" aria-labelledby="Edit or Delete Category" aria-hidden="true">
+  <div class="modal fade" id="editCategoryDialogOptions" tabindex="-1" aria-labelledby="Edit or Delete Category"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">

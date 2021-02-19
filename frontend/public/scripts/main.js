@@ -178,6 +178,26 @@ function main() {
             document.querySelector("#checkOutButton").style.display = "none";
             let addButton = document.querySelector("#addButton");
             addButton.style.display = "initial";
+            let editCategoryButton = document.querySelector("#editCategoryButton");
+            editCategoryButton.onclick = (params) => {
+                $("#editCategoryDialogOptions").modal("show");
+                // on modal save button press
+                document.querySelector("#nextButton").onclick = (event) => {
+                    if (document.querySelector("#editCategory").checked) {
+                        $("#editCategoryDialog").modal("show");
+                        var editModal = document.querySelector("#addCategoryDialog");
+                        editModal.querySelector("#editCategoryButton").onclick = (event) => {
+                            editCategory();
+                        }
+                    } else if (document.querySelector("#deleteCategory").checked) {
+                        $("#deleteCategoryDialog").modal("show");
+                        var deleteModal = document.querySelector("#addItemDialog");
+                        deleteModal.querySelector("#deleteCategoryButton").onclick = (event) => {
+                            deleteCategory();
+                        }
+                    }
+                }
+            }
             addButton.onclick = (event) => {
                 $("#addItemDialogOptions").modal("show");
                 // on modal save button press
@@ -225,6 +245,24 @@ function main() {
             search(isManagement);
         }
     }
+}
+
+function editCategory() {
+    let category = documet.querySelector("#inputName");
+    fetch(apiURLEditCategory + category).then(
+        response => response.json()
+    ).then((data) => {
+        loadEntries("", true, true);
+    });
+}
+
+function deleteCategory() {
+    let category = documet.querySelector("#inputName");
+    fetch(apiURLDeleteCategory + category).then(
+        response => response.json()
+    ).then((data) => {
+        loadEntries("", true, true);
+    });
 }
 
 function createClubMember(uid, name) {
@@ -495,7 +533,7 @@ function checkPermissions(uid) {
 
                 console.log("done");
             };
-        }else{
+        } else {
             document.querySelector("#button_manage").style.display = "none";
         }
     });
@@ -725,6 +763,7 @@ function loadRentals(parameter) {
                     loadRentalItems(id);
                 };
             })(i);
+            interiorCard.querySelector(".rent").style.display = "none";
             interiorCard.querySelector(".description").innerHTML = data[i][0]; //TODO: week 9 do this so click works and detail show
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
@@ -919,7 +958,12 @@ function deleteItem(itemID) {
     }).then(
         response => response.json()
     ).then((data) => {
-        loadEntries("", true, true);
+        if (data[0] == "Cannot Delete Items in Use.") {
+            alert(data[0]);
+        } else {
+            loadEntries("", true, true);
+            alert("Deleted item.");
+        }
     });
 }
 
@@ -963,6 +1007,12 @@ function addToCart(itemID, cartID, quantity) {
     }).then(
         response => response.json()
     ).then((data) => {
+        if (data[0] == "Quantity is greater than the items available") {
+            alert(data[0]);
+            $("#rentDialog").modal("dismiss");
+        } else {
+            alert("Item added to cart!");
+        }
         console.log("after add data = " + data);
     });
 }
