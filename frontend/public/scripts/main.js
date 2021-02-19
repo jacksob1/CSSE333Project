@@ -31,6 +31,7 @@ apiURLItem = "http://localhost:4000/item/";
 apiURLAddCategory = "http://localhost:4000/addcategory/";
 apiURLAddExecutive = "http://localhost:4000/addexecutive/";
 apiURLAddExecSig= "http://localhost:4000/addexecsig/";
+apiURLGetExecs = "http://localhost:4000/getallexec/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -232,7 +233,42 @@ function main() {
 }
 
 function loadExecutives() {
+    const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
+    fetch(apiURLGetExecs).then(
+        response => response.json()
+    ).then((data) => {
+        for (var i = 0; i < data.length; i++) {
+            //select and create templates
+            let template = document.querySelector("#cardTemplate");
+            let newCard = template.content.cloneNode(true);
+            let interiorTemplate = document.querySelector("#listItemInteriorRental");
+            //put the item name in the newCard
 
+            //define the interior structure for the description and set it to the item's description
+            let interiorCard = interiorTemplate.content.cloneNode(true);
+            interiorCard.querySelector(".description").innerHTML = data[i][0];
+            interiorCard.querySelector(".detailsButton").innerHTML = "DELETE";
+            interiorCard.querySelector(".rent").style.display="none";
+            (function (i) {
+                var id = data[i][0];
+                interiorCard.querySelector(".detailsButton").onclick = (event) => {
+                    //delete here
+                };
+            })(i);
+            interiorCard.querySelector(".rent").display = "none";
+            //appent the interior card to the list item
+            newCard.querySelector(".inventory-listitem").append(interiorCard);
+            //add the card to the new list
+            newList.append(newCard);
+        }
+        //removes the old rentalsContainer and id
+        const oldList = document.querySelector("#rentalsContainer");
+        oldList.removeAttribute("id");
+        //hide the old container and replace with the new list
+        oldList.hidden = true;
+        oldList.parentElement.appendChild(newList);
+
+    });
 }
 
 function addCategory(name) {
@@ -403,6 +439,7 @@ function loadCurrent() {
 
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
+            interiorCard.querySelector(".rent").style.display="none";
             (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {

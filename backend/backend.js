@@ -505,6 +505,21 @@ app.get("/permissions/:uid", function (req, res) {
     connection.connect();
 })
 
+app.get("/getallexec", function(req,res){
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function(err){
+        if(err){
+            console.log(err);
+            process.exit(1);
+        }
+        executeStatement(res, connection, "EXEC [get_All_Executives]");
+        return;
+    });
+    connection.connect();
+})
+
 app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cartID", function(req, res){
     let name = req.params.name;
     let address = req.params.address;
