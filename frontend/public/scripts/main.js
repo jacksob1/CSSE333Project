@@ -133,7 +133,7 @@ function main() {
                 $("#createExecDialog").modal("show");
                 document.querySelector("#addItemDialogOptions").style.display = "none";
                 var addModal = document.querySelector("#createExecDialog");
-                addModal.querySelector("#addButton").onclick = (event) => {
+                addModal.querySelector("#addExecButton").onclick = (event) => {
                     addExecutive(addModal.querySelector("#inputName").value);
                     loadExecutives();
                 }
@@ -294,6 +294,7 @@ function loadExecutives() {
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
                     console.log("is here");
                     deleteExec(id);
+                    loadExecutives();
                 };
             })(i);
             interiorCard.querySelector(".rent").display = "none";
@@ -486,6 +487,8 @@ function checkPermissions(uid) {
 
                 console.log("done");
             };
+        }else{
+            document.querySelector("#buttonmanage").style.display = "none";
         }
     });
 }

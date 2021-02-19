@@ -229,7 +229,7 @@ html {
     margin-top: 50px;
 }
 
-#rosefireButton {
+#massloadButton, #rosefireButton {
     border-color: white;
     border-style: solid;
     background-color: cadetblue;
@@ -285,8 +285,8 @@ html {
     text-shadow: #212121;
 }
 
-#rosefireButton {
-    font-size: x-large;
+#massloadButton, #rosefireButton {
+    font-size: large;
     color: white;
 }
 
