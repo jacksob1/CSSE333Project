@@ -4,11 +4,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <!-- <script src="scripts/jquery.min.js"></script> -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+  <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="styles/styles.css">
-  <title>Inventory</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+  <link href="styles/jquery.signature.css" rel="stylesheet">
+  <style>
+    body>iframe {
+      display: none;
+    }
+
+    .kbw-signature {
+      width: 30vw;
+      height: 200px;
+    }
+  </style>
+  <!--[if IE]>
+  <script src="js/excanvas.js"></script>
+  <![endif]-->
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <!-- <script src="scripts/jquery.min.js"></script> -->
+  <script src="scripts/jquery.signature.js"></script>
+
+  <script>
+    $(function () {
+      $('#sig').signature();
+      $('#clear').click(function () {
+        $('#sig').signature('clear');
+      });
+      $('#json').click(function () {
+        alert($('#sig').signature('toJSON'));
+      });
+      $('#svg').click(function () {
+        alert($('#sig').signature('toSVG'));
+      });
+    });
+  </script>
 </head>
 
 <body>
@@ -30,7 +67,7 @@
         <a id="managePermissions" href="#manage-permissions">Permissions</a>
       </div>
     </div>
-      <!-- Search Entry Field -->
+    <!-- Search Entry Field -->
     <div class="search-container">
       <button id="search-button" type="submit"><i class="fa fa-search"></i></button>
       <input id="search" type="text" placeholder="Search.." name="search">
@@ -76,6 +113,7 @@
       <!-- <div class="col-6"></div> -->
       <div class="col-3">
         <button type="button" class="detailsButton btn btn-raised btn-primary btn-block detail">DETAILS</button>
+        <button type="button" class="btn btn-raised btn-primary btn-block rent">SIGN</button>
       </div>
     </div>
   </template>
@@ -174,6 +212,41 @@
     </div>
   </div>
 
+
+  <!--Sign Modal -->
+  <div class="modal fade" id="signDialog" tabindex="-1" aria-labelledby="Sign rental dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Sign Rental</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputName">Name:</label>
+            <input type="text" class="form-control" id="inputName" placeholder="Executive name">
+          </div>
+
+          <div class="form-group">
+            <!-- signature section -->
+            <div id="signBox">
+              <div id="sigBox">
+                <p>Signature:</p>
+                <div id="sig" class="kbw-signature"></div>
+                <button id="clear" class="btn btn-raised btn-primary btn-block">Clear</button>
+                <label for="inputSignDate">Date:</label>
+                <input type="date" class="form-control form2" id="inputSignDate">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="confirm" type="button" data-dismiss="modal" class="btn btn-primary">CONFIRM</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Select Add Type Modal -->
   <div class="modal fade" id="addItemDialogOptions" tabindex="-1" aria-labelledby="Add item dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -229,7 +302,6 @@
   </template>
 
   <!-- Scripts -->
-  <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
   <script src="scripts/bootstrap-material-design.js"></script>
   <script>

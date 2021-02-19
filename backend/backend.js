@@ -89,6 +89,26 @@ app.get("/clubmember/:uid", function (req, res) {
 })
 
 //check to see if a club member exists
+app.post("/addexecsig/:sig&:id", function (req, res) {
+    let signature = req.params.sig;
+    let id = req.params.id;
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+
+        executeAddExecSig(res, connection, signature, id);
+        return;
+    });
+    connection.connect();
+})
+
+//check to see if a club member exists
 app.post("/delete/:itemID", function (req, res) {
     let itemID = parseInt(req.params.itemID);
     var Connection = require('tedious').Connection;
@@ -926,6 +946,47 @@ function executeCartAdd(res, connection, rentalID, itemID, quantity){
     request.addParameter('rentalID', TYPES.Int, rentalID);
     request.addParameter('itemID', TYPES.Int, itemID);
     request.addParameter('number', TYPES.Int, quantity);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+function executeAddExecSig(res, connection, signature, rentalID){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [update_rental] @ID = @rentalID, @newExecutiveSignature = @signature;`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('rentalID', TYPES.Int, rentalID);
+    request.addParameter('signature', TYPES.Text, signature);
 
     //make an array of the columns
     request.on('row', function (columns) {

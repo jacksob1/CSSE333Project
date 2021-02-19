@@ -26,6 +26,7 @@ html {
 
 .inventory-listitem {
     text-align: start;
+    font-size: 1.1em;
 }
 
 .page-container {
@@ -75,7 +76,7 @@ html {
     padding: 10px;
     z-index: 92;
     box-shadow: 0px 0px 8px #888888;
-    font-size: 1.25em;
+    font-size: 1.1em;
     border-radius: 3px;
     margin-top: 10px;
 }
@@ -443,6 +444,10 @@ html {
         width: 100%;
         margin: 0;
         padding: 14px;
+    }
+    .inventory-listitem {
+        text-align: start;
+        font-size: 0.75em;
     }
 
     .topnav input[type=text] {

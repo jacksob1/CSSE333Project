@@ -1,9 +1,3 @@
-//const { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } = require("constants");
-
-// const { create } = require("domain");
-
-// const { DocumentProvider } = require("mongoose");
-
 var rhit = rhit || {};
 
 rhit.FB_KEY_NAME = "name";
@@ -35,7 +29,8 @@ apiURLCartRemove = "http://localhost:4000/cartremove/";
 apiURLSubmitForm = "http://localhost:4000/submitForm/";
 apiURLItem = "http://localhost:4000/item/";
 apiURLAddCategory = "http://localhost:4000/addcategory/";
-
+apiURLAddExecutive = "http://localhost:4000/addexecutive/";
+apiURLAddExecSig= "http://localhost:4000/addexecsig/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
 
@@ -127,10 +122,6 @@ function main() {
             console.log("member added");
         });
     }
-    // .catch(function () {
-    //     console.log("error");
-    // });
-    //see if the user has executive status
 
     if (document.querySelector("#checkOutButton")) {
         document.querySelector("#checkOutButton").style.display = "none";
@@ -147,6 +138,21 @@ function main() {
         }
     }
 
+    //load items on inventory page
+    if (document.querySelector("#managePermissions")) {
+        document.querySelector("#managePermissions").onclick = (event) => {
+            document.querySelector("#rentalsTitle").innerHTML = "Executives";
+            document.querySelector(".search-container").style.display = "none";
+            document.querySelector("#checkOutButton").style.display = "none";
+            let addButton = document.querySelector("#addButton");
+            addButton.style.display = "initial";
+            addButton.onclick = (event) => {
+                addExecutive();
+            }
+            loadExecutives();
+        }
+    }
+
     //load items on cart page
     if (document.querySelector("#cart")) {
         console.log("cart clicked");
@@ -154,7 +160,7 @@ function main() {
         document.querySelector("#cart").onclick = (event) => {
             document.querySelector("#rentalsTitle").innerHTML = "Cart";
             document.querySelector("#checkOutButton").style.display = "initial";
-            document.querySelector("#checkOutButton").onclick=(event) => {
+            document.querySelector("#checkOutButton").onclick = (event) => {
                 document.location = "formpage.html";
                 checkOut();
             }
@@ -178,7 +184,7 @@ function main() {
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#checkOutButton").style.display = "none";
-            let addButton = document.querySelector("#addButton")
+            let addButton = document.querySelector("#addButton");
             addButton.style.display = "initial";
             addButton.onclick = (event) => {
                 $("#addItemDialogOption").modal("show");
@@ -223,6 +229,10 @@ function main() {
             search(isManagement);
         }
     }
+}
+
+function loadExecutives() {
+
 }
 
 function addCategory(name) {
@@ -390,6 +400,7 @@ function loadCurrent() {
             let interiorTemplate = document.querySelector("#listItemInteriorRental");
             //put the item name in the newCard
             newCard.querySelector(".inventory-listitem").innerHTML = data[i][1] + " to " + data[i][2];
+
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
             (function (i) {
@@ -398,6 +409,7 @@ function loadCurrent() {
                     loadRentalItemsForRemoval(id);
                 };
             })(i);
+            interiorCard.querySelector(".rent").display = "none";
             interiorCard.querySelector(".description").innerHTML = "ID: " + data[i][0] + ", Renter: " + data[i][3]; //TODO: week 9 do this so click works and detail show
             //appent the interior card to the list item
             newCard.querySelector(".inventory-listitem").append(interiorCard);
@@ -488,6 +500,13 @@ function loadPending() {
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
                     loadRentalItems(id);
                 };
+                interiorCard.querySelector(".rent").onclick = (event) => {
+                    $("#signDialog").modal("show");
+                    var signModal = document.querySelector("#signDialog");
+                    signModal.querySelector("#confirm").onclick = (event) => {
+                        addSignature(id);
+                    }
+                };
             })(i);
             interiorCard.querySelector(".description").innerHTML = data[i][0]; //TODO: week 9 do this so click works and detail show
             //appent the interior card to the list item
@@ -502,6 +521,17 @@ function loadPending() {
         oldList.hidden = true;
         oldList.parentElement.appendChild(newList);
         console.log("finished");
+    });
+}
+
+function addSignature(id) {
+    let signature = $('#sig').signature('toJSON');
+    fetch(apiURLAddExecSig + signature + "&" + id, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("after add data = " + data);
     });
 }
 
@@ -661,7 +691,7 @@ function loadEntries(string, isCategorySearch, isManagement) {
     //request the items with the URL and search word
     let url = apiURL;
 
-    if(isCategorySearch){
+    if (isCategorySearch) {
         url = apiURLSearchCategory;
     }
 
