@@ -488,7 +488,7 @@ function checkPermissions(uid) {
                 console.log("done");
             };
         }else{
-            document.querySelector("#buttonmanage").style.display = "none";
+            document.querySelector("#button_manage").style.display = "none";
         }
     });
 }
