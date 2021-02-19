@@ -201,6 +201,14 @@ function main() {
                     }
                 }
             }
+
+            let editCategoryButton = document.querySelector("#editCategoryButton");
+            editCategoryButton.style.display = "initial";
+            editCategoryButton.onclick = (event) => {
+                console.log("Edit Category was clicked");
+                $("editCategoryDialogOptions").modal("show");
+            }
+
             loadEntries("", true, true);
         }
     }

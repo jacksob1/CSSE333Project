@@ -80,6 +80,11 @@
     <i class="material-icons">add</i>
   </button>
 
+  <!-- Edit/Delete Category Button-->
+  <button type="button" id="editCategoryButton" class="btn">
+    <i class="material-icons">build</i>
+  </button>
+
   <!-- Background -->
   <div id="bg">
     <img src="https://live.staticflickr.com/1717/26309561881_428686d4ac_b.jpg" alt="">
@@ -329,6 +334,35 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
           <button id="nextButton" type="button" data-dismiss="modal" class="btn btn-primary">NEXT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Select Edit or Delete Category Modal-->
+  <div class="modal fade" id="editCategoryDialogOptions" tabindex="-1" aria-labelledby="Edit or Delete Category" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit or Delete Category</h5>
+        </div>
+        <div class="modal-body">
+          <div class="radio">
+            <label>
+              <input type="radio" name="optionsRadios" id="editCategory" value="option3" checked>
+              Edit
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="optionsRadios" id="deleteCategory" value="option4">
+              Delete
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+          <button id="categoryNameButton" type="button" data-dismiss="modal" class="btn btn-primary">NEXT</button>
         </div>
       </div>
     </div>

@@ -55,6 +55,16 @@ html {
     display: none;
 }
 
+#editCategoryButton {
+    position: fixed;
+    bottom: 30px;
+    right: 100px;
+    z-index: 900;
+    color: white;
+    background-color: #2196F3;
+    display: none;
+}
+
 
 #rentalsTitle {
     position: sticky;
