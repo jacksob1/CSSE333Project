@@ -547,6 +547,12 @@ app.post("/submitForm/:name&:address&:city&:state&:zip&:startDate&:endDate&:cart
     connection.connect();
 })
 
+app.get("/getinsertions", function(req, res){
+    var insertions = require('../frontend/public/insertions.json');
+
+    res.send(insertions);
+})
+
 
 //execute the the search statement and send a response using res and connection
 function executeStatement(res, connection, searchStatement) {

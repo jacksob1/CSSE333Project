@@ -10,6 +10,7 @@ rhit.FB_END = "endDate";
 rhit.FB_CITY = "city";
 
 apiURL = "http://localhost:4000/search/";
+apiURLMassLoad = "http://localhost:4000/getinsertions/";
 apiURLSearchCategory = "http://localhost:4000/categorysearch/";
 apiURLRental = "http://localhost:4000/rentals/";
 apiURLRentalItems = "http://localhost:4000/rentalitems/";
@@ -97,31 +98,11 @@ function main() {
         document.querySelector("#rosefireButton").onclick = (event) => {
             signIn();
         }
-    }
 
-    function createClubMember(uid, name) {
-        fetch(apiURLClubMember + uid).then(
-            response => response.json()
-        ).then((data) => {
-            if (data.length == 0) {
-                console.log(
-                    "create new member" + uid + name
-                );
-                createNewMember(uid, name);
-            } else {
-                console.log("no new member");
-            }
-        });
-    }
-
-    function createNewMember(uid, name) {
-        fetch(apiURLClubMemberAdd + uid + "&" + name, {
-            method: "POST"
-        }).then(
-            response => response.json()
-        ).then((data) => {
-            console.log("member added");
-        });
+        document.querySelector("#massloadButton").onclick = (event) => {
+            console.log("Load Database");
+            massLoad();
+        }
     }
 
     if (document.querySelector("#checkOutButton")) {
@@ -232,6 +213,59 @@ function main() {
     }
 }
 
+function createClubMember(uid, name) {
+    fetch(apiURLClubMember + uid).then(
+        response => response.json()
+    ).then((data) => {
+        if (data.length == 0) {
+            console.log(
+                "create new member" + uid + name
+            );
+            createNewMember(uid, name);
+        } else {
+            console.log("no new member");
+        }
+    });
+}
+
+function createNewMember(uid, name) {
+    fetch(apiURLClubMemberAdd + uid + "&" + name, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
+        console.log("member added");
+    });
+}
+
+function massLoad(){
+    fetch(apiURLMassLoad).then(
+        (response) => response.json()
+    ).then(async (data) => {
+        console.log(data);
+        let categories = data.Categories;
+        let clubMembers = data["Club Members"];
+        let executives = data.Executives;
+        let items = data.Items;
+
+        for(let i=0; i<categories.length; i++){
+            addCategory(categories[i].name);
+        }
+
+        for(let i = 0; i<clubMembers.length; i++){
+            createNewMember(clubMembers[i].memberID, clubMembers[i].name)
+        }
+
+        for(let i = 0; i<executives.length; i++){
+            console.log("Load Executives in JSON");
+        }
+
+        for(let i=0; i < items.length; i++){
+            await addItem(items[i].name, items[i].category, items[i].price, items[i].description, items[i].quantity, items[i].manager);
+        }
+    })
+}
+
 function loadExecutives() {
     const newList = htmlToElement('<div id="rentalsContainer" class="col-md-8"></div>');
     fetch(apiURLGetExecs).then(
@@ -297,6 +331,16 @@ function getModalValues(isAdd, id) {
         response => response.json()
     ).then((data) => {
         loadEntries("", true);
+        console.log("item added");
+    });
+}
+
+async function addItem(name, category, price, description, quantity, id){
+    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${id}`, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
         console.log("item added");
     });
 }
@@ -845,14 +889,6 @@ function addItemToRental(itemID, quantity) {
         }
     });
 }
-
-// document.querySelector(".search-container").style.display = "none";
-// document.querySelector("#checkOutButton").style.display = "initial";
-// document.querySelector("#addButton").style.display = "none";
-// document.querySelector("#checkOutButton").onclick = (event) => {
-//     document.location = `formpage.html`;
-// }
-
 
 function makeCart(itemID, uid, quantity) {
     fetch(apiURLMakeCart + uid).then(
