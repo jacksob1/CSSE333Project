@@ -13,6 +13,7 @@ var Request = require('tedious').Request;
 //other stuff
 const logger = require("morgan");
 const { TYPES } = require("tedious");
+// const { request } = require("express");
 app.use(logger('dev')); //helpful info serverside when requests come in
 
 app.use('/static', express.static("public"));
@@ -406,9 +407,10 @@ app.post("/addcategory/:category", function (req, res) {
 
 
 //add an executive
-app.post("/addexecutive/:id", function (req, res) {
+app.post("/addexecutive/:id&:uid", function (req, res) {
     //retrieve the search word from the parameters
     let id = req.params.id;
+    let uid = req.params.uid;
     //make connection and config
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -420,16 +422,17 @@ app.post("/addexecutive/:id", function (req, res) {
             process.exit(1);
         }
 
-        executeAddExec(res, connection, id);
+        executeAddExec(res, connection, id, uid);
         return;
     });
     connection.connect();
 })
 
 //delete an executive
-app.post("/deleteexecutive/:id", function (req, res) {
+app.post("/deleteexecutive/:id&:uid", function (req, res) {
     //retrieve the search word from the parameters
     let id = req.params.id;
+    let uid = req.params.uid;
     //make connection and config
     var Connection = require('tedious').Connection;
     var config = makeConfig();
@@ -441,24 +444,25 @@ app.post("/deleteexecutive/:id", function (req, res) {
             process.exit(1);
         }
 
-        executeDeleteExec(res, connection, id);
+        executeDeleteExec(res, connection, id, uid);
         return;
     });
     connection.connect();
 })
 
 
-function executeAddExec(res, connection, id){
+function executeAddExec(res, connection, id, uid){
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [create_Executive] @ID = @execID`, function(err){
+    request = new Request(`EXEC [create_Executive] @ID = @execID, @UserID = @uid`, function(err){
         if(err){
             console.log(err);
         }
     });
 
     request.addParameter('execID', TYPES.NVarChar, id);
+    request.addParameter('uid', TYPES.NVarChar, uid);
 
     //make an array of the columns
     request.on('row', function (columns) {
@@ -489,17 +493,18 @@ function executeAddExec(res, connection, id){
 }
 
 
-function executeDeleteExec(res, connection, id){
+function executeDeleteExec(res, connection, id, uid){
     let data = [];
 
     var Request = require('tedious').Request;
-    request = new Request(`EXEC [delete_Executive] @ID = @execID`, function(err){
+    request = new Request(`EXEC [delete_Executive] @ID = @execID, @UserID = @uid`, function(err){
         if(err){
             console.log(err);
         }
     });
 
     request.addParameter('execID', TYPES.NVarChar, id);
+    request.addParameter('uid', TYPES.NVarChar, uid);
 
     //make an array of the columns
     request.on('row', function (columns) {
@@ -1172,7 +1177,7 @@ function executeRentals(res, connection, renterID){
         }
     });
 
-    request.addParameter('rentalID', TYPES.NVarChar, renterID);
+    request.addParameter('renterID', TYPES.NVarChar, renterID);
 
     //make an array of the columns
     request.on('row', function (columns) {

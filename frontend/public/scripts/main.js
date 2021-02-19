@@ -314,7 +314,7 @@ function loadExecutives() {
 }
 
 function deleteExec(id) {
-    fetch(apiURLDeleteExecutive + id, {
+    fetch(apiURLDeleteExecutive + id + '&' + uid, {
         method: "POST"
     }).then(
         response => response.json()
@@ -324,7 +324,7 @@ function deleteExec(id) {
 }
 
 function addExecutive(id) {
-    fetch(apiURLAddExecutive + id, {
+    fetch(apiURLAddExecutive + id + '&' + uid, {
         method: "POST"
     }).then(
         response => response.json()
