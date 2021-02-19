@@ -292,7 +292,7 @@ function loadExecutives() {
             (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
-                    printf("is here");
+                    console.log("is here");
                     deleteExec(id);
                 };
             })(i);
