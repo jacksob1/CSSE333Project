@@ -222,12 +222,12 @@ function main() {
                 }
             }
 
-            let editCategoryButton = document.querySelector("#editCategoryButton");
-            editCategoryButton.style.display = "initial";
-            editCategoryButton.onclick = (event) => {
-                console.log("Edit Category was clicked");
-                $("editCategoryDialogOptions").modal("show");
-            }
+            // let editCategoryButton = document.querySelector("#editCategoryButton");
+            // editCategoryButton.style.display = "initial";
+            // editCategoryButton.onclick = (event) => {
+            //     console.log("Edit Category was clicked");
+            //     $("editCategoryDialogOptions").modal("show");
+            // }
 
             loadEntries("", true, true);
         }
@@ -310,6 +310,7 @@ function massLoad() {
 
         for (let i = 0; i < executives.length; i++) {
             console.log("Load Executives in JSON");
+            await addExecutive(executives[i].id);
         }
 
         for (let i = 0; i < items.length; i++) {
@@ -369,8 +370,8 @@ function deleteExec(id) {
     });
 }
 
-function addExecutive(id) {
-    fetch(apiURLAddExecutive + id + '&' + uid, {
+async function addExecutive(id) {
+    await fetch(apiURLAddExecutive + id + '&' + uid, {
         method: "POST"
     }).then(
         response => response.json()
