@@ -31,7 +31,8 @@ apiURLSubmitForm = "http://localhost:4000/submitForm/";
 apiURLItem = "http://localhost:4000/item/";
 apiURLAddCategory = "http://localhost:4000/addcategory/";
 apiURLAddExecutive = "http://localhost:4000/addexecutive/";
-apiURLAddExecSig= "http://localhost:4000/addexecsig/";
+apiURLDeleteExecutive = "http://localhost:4000/deleteexecutive/";
+apiURLAddExecSig = "http://localhost:4000/addexecsig/";
 apiURLGetExecs = "http://localhost:4000/getallexec/";
 var defaultSearchword = "DEFAULT_SEARCH_PARAM";
 var uid;
@@ -116,7 +117,7 @@ function main() {
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#checkOutButton").style.display = "none";
             document.querySelector("#addButton").style.display = "none";
-            loadEntries("", false);
+            loadEntries("", false, false);
         }
     }
 
@@ -129,7 +130,13 @@ function main() {
             let addButton = document.querySelector("#addButton");
             addButton.style.display = "initial";
             addButton.onclick = (event) => {
-                addExecutive();
+                $("#createExecDialog").modal("show");
+                document.querySelector("#addItemDialogOptions").style.display = "none";
+                var addModal = document.querySelector("#createExecDialog");
+                addModal.querySelector("#addButton").onclick = (event) => {
+                    addExecutive(addModal.querySelector("#inputName").value);
+                    loadExecutives();
+                }
             }
             loadExecutives();
         }
@@ -160,22 +167,25 @@ function main() {
         }
     }
 
+    let isManagement = false;
+
     // set up the executive inventory page
     if (document.querySelector("#execInventory")) {
         document.querySelector("#execInventory").onclick = (event) => {
+            isManagement = true;
             document.querySelector("#rentalsTitle").innerHTML = "Items";
             document.querySelector(".search-container").style.display = "initial";
             document.querySelector("#checkOutButton").style.display = "none";
             let addButton = document.querySelector("#addButton");
             addButton.style.display = "initial";
             addButton.onclick = (event) => {
-                $("#addItemDialogOption").modal("show");
+                $("#addItemDialogOptions").modal("show");
                 // on modal save button press
                 document.querySelector("#nextButton").onclick = (event) => {
                     if (document.querySelector("#addCategory").checked) {
                         $("#addCategoryDialog").modal("show");
                         var addModal = document.querySelector("#addCategoryDialog");
-                        addModal.querySelector("#createButton").onclick = (event) => {
+                        addModal.querySelector("#addExecButton").onclick = (event) => {
                             //add the category here
                             console.log("adding here");
                             addCategory(addModal.querySelector("#inputName").value);
@@ -186,7 +196,7 @@ function main() {
                         var addModal = document.querySelector("#addItemDialog");
                         addModal.querySelector("#addSaveButton").onclick = (event) => {
                             getModalValues(true, -1);
-                            loadEntries("", true);
+                            loadEntries("", true, true);
                         }
                     }
                 }
@@ -194,12 +204,8 @@ function main() {
             loadEntries("", true, true);
         }
     }
-    let isManagement = false;
 
     //if enter is pressed in the searchbar, send a request for the searchword
-    if (document.querySelector("#execInventory")) {
-        isManagement = true;
-    }
     if (document.querySelector("#search-button")) {
         $(".search-container").keyup(function (event) {
             if (event.which === 13) {
@@ -238,7 +244,7 @@ async function createNewMember(uid, name) {
     });
 }
 
-function massLoad(){
+function massLoad() {
     fetch(apiURLMassLoad).then(
         (response) => response.json()
     ).then(async (data) => {
@@ -248,19 +254,19 @@ function massLoad(){
         let executives = data.Executives;
         let items = data.Items;
 
-        for(let i=0; i<categories.length; i++){
+        for (let i = 0; i < categories.length; i++) {
             await addCategory(categories[i].name);
         }
 
-        for(let i = 0; i<clubMembers.length; i++){
+        for (let i = 0; i < clubMembers.length; i++) {
             await createNewMember(clubMembers[i].memberID, clubMembers[i].name)
         }
 
-        for(let i = 0; i<executives.length; i++){
+        for (let i = 0; i < executives.length; i++) {
             console.log("Load Executives in JSON");
         }
 
-        for(let i=0; i < items.length; i++){
+        for (let i = 0; i < items.length; i++) {
             await addItem(items[i].name, items[i].category, items[i].price, items[i].description, items[i].quantity, items[i].manager, 1);
         }
     })
@@ -282,11 +288,12 @@ function loadExecutives() {
             let interiorCard = interiorTemplate.content.cloneNode(true);
             interiorCard.querySelector(".description").innerHTML = data[i][0];
             interiorCard.querySelector(".detailsButton").innerHTML = "DELETE";
-            interiorCard.querySelector(".rent").style.display="none";
+            interiorCard.querySelector(".rent").style.display = "none";
             (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
-                    //delete here
+                    printf("is here");
+                    deleteExec(id);
                 };
             })(i);
             interiorCard.querySelector(".rent").display = "none";
@@ -301,6 +308,26 @@ function loadExecutives() {
         //hide the old container and replace with the new list
         oldList.hidden = true;
         oldList.parentElement.appendChild(newList);
+
+    });
+}
+
+function deleteExec(id) {
+    fetch(apiURLDeleteExecutive + id, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
+
+    });
+}
+
+function addExecutive(id) {
+    fetch(apiURLAddExecutive + id, {
+        method: "POST"
+    }).then(
+        response => response.json()
+    ).then((data) => {
 
     });
 }
@@ -330,12 +357,12 @@ function getModalValues(isAdd, id) {
     }).then(
         response => response.json()
     ).then((data) => {
-        loadEntries("", true);
+        loadEntries("", true, true);
         console.log("item added");
     });
 }
 
-async function addItem(name, category, price, description, quantity, memberid, id){
+async function addItem(name, category, price, description, quantity, memberid, id) {
     await fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${memberid}&${id}`, {
         method: "POST"
     }).then(
@@ -483,7 +510,7 @@ function loadCurrent() {
 
             //define the interior structure for the description and set it to the item's description
             let interiorCard = interiorTemplate.content.cloneNode(true);
-            interiorCard.querySelector(".rent").style.display="none";
+            interiorCard.querySelector(".rent").style.display = "none";
             (function (i) {
                 var id = data[i][0];
                 interiorCard.querySelector(".detailsButton").onclick = (event) => {
@@ -586,6 +613,7 @@ function loadPending() {
                     var signModal = document.querySelector("#signDialog");
                     signModal.querySelector("#confirm").onclick = (event) => {
                         addSignature(id);
+                        loadPending();
                     }
                 };
             })(i);
@@ -806,6 +834,15 @@ function loadEntries(string, isCategorySearch, isManagement) {
                     var deleteButton = newCard.querySelector(".rent");
                     deleteButton.innerHTML = "DELETE";
 
+                    newCard.querySelector(".description").onclick = (event) => {
+                        $("#displayDetailsDialog").modal("show");
+                        var detailsModal = document.querySelector("#displayDetailsDialog");
+                        detailsModal.querySelector("#inputName").value = data[i][3];
+                        detailsModal.querySelector("#inputCost").value = data[i][2];
+                        detailsModal.querySelector("#inputTotal").value = data[i][1];
+                        detailsModal.querySelector("#inputDescription").value = data[i][4];
+                    }
+
                     console.log("is management");
 
                     editButton.onclick = (event) => {
@@ -815,7 +852,7 @@ function loadEntries(string, isCategorySearch, isManagement) {
                         addModal.querySelector(".modal-title").innerHTML = "Edit Item";
                         addModal.querySelector("#addSaveButton").onclick = (event) => {
                             getModalValues(false, id);
-                            loadEntries("", true);
+                            loadEntries("", true, isManagement);
                         }
                         console.log("edit clicked");
                     }
@@ -824,6 +861,7 @@ function loadEntries(string, isCategorySearch, isManagement) {
                         deleteItem(id);
                     }
                 } else {
+                    newCard.querySelector(".detail").style.display = "none";
                     newCard.querySelector(".rent").onclick = (event) => {
 
                         $("#rentDialog").modal("show");
@@ -870,7 +908,7 @@ function deleteItem(itemID) {
     }).then(
         response => response.json()
     ).then((data) => {
-        loadEntries("", true);
+        loadEntries("", true, true);
     });
 }
 

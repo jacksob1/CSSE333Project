@@ -404,6 +404,131 @@ app.post("/addcategory/:category", function (req, res) {
     connection.connect();
 })
 
+
+//add an executive
+app.post("/addexecutive/:id", function (req, res) {
+    //retrieve the search word from the parameters
+    let id = req.params.id;
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+
+        executeAddExec(res, connection, id);
+        return;
+    });
+    connection.connect();
+})
+
+//delete an executive
+app.post("/deleteexecutive/:id", function (req, res) {
+    //retrieve the search word from the parameters
+    let id = req.params.id;
+    //make connection and config
+    var Connection = require('tedious').Connection;
+    var config = makeConfig();
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        // If no error, then good to proceed.
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+
+        executeDeleteExec(res, connection, id);
+        return;
+    });
+    connection.connect();
+})
+
+
+function executeAddExec(res, connection, id){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [create_Executive] @ID = @execID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('execID', TYPES.NVarChar, id);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
+
+function executeDeleteExec(res, connection, id){
+    let data = [];
+
+    var Request = require('tedious').Request;
+    request = new Request(`EXEC [delete_Executive] @ID = @execID`, function(err){
+        if(err){
+            console.log(err);
+        }
+    });
+
+    request.addParameter('execID', TYPES.NVarChar, id);
+
+    //make an array of the columns
+    request.on('row', function (columns) {
+        let arr = [];
+        columns.forEach(function (column) {
+            let value = "";
+            if (column.value === null) {
+                value += 'NULL';
+            } else {
+                value += column.value + "";
+            }
+            arr.push(value);
+        });
+        data.push(arr);
+    });
+
+    request.on('doneInProc', function (rowCount, more) {
+        console.log(rowCount + ' rows returned');
+    });
+
+    request.on('requestCompleted', function () {
+        connection.close();
+        //return the requested data
+        res.send(data);
+    });
+    //execute the request
+    connection.execSql(request);
+}
+
 //find id of cart based on uid
 app.get("/cart/:uid", function (req, res) {
     //retrieve the search word from the parameters

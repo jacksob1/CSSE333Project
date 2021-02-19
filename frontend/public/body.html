@@ -76,7 +76,7 @@
   </div>
 
   <!-- FAB -->
-  <button type="button" id="addButton" class="btn bmd-btn-fab" data-toggle="modal" data-target="#addItemDialogOptions">
+  <button type="button" id="addButton" class="btn bmd-btn-fab">
     <i class="material-icons">add</i>
   </button>
 
@@ -157,8 +157,8 @@
             <input type="number" class="form-control" id="inputPrice">
           </div>
           <div class="form-group">
-            <label for="descriptionInput" class="bmd-label-floating">Description:</label>
-            <textarea class="form-control" id="descriptionInput" rows="3"></textarea>
+            <label for="descriptionInput">Description:</label>
+            <input type="text" class="form-control" id="descriptionInput">
           </div>
         </div>
         <div class="modal-footer">
@@ -212,6 +212,64 @@
     </div>
   </div>
 
+    <!-- Create Exec Modal -->
+    <div class="modal fade" id="createExecDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Executive:</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputName">Name:</label>
+              <input type="text" class="form-control" id="inputName" placeholder="Executive username">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+            <button id="addExecButton" type="button" data-dismiss="modal" class="btn btn-primary">ADD</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+
+    <!-- Display details Modal -->
+    <div class="modal fade" id="displayDetailsDialog" tabindex="-1" aria-labelledby="Rent item dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Item Details</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputName">Item Name:</label>
+              <input type="text" class="form-control" id="inputName" placeholder="Item name" disabled>
+            </div>
+            <div class="form-group">
+              <label for="inputCost">Item Cost:</label>
+              <input type="text" class="form-control" id="inputCost" placeholder="Item cost" disabled>
+            </div>
+            <!-- <div class="form-group">
+              <label for="inputRentedItems">Rented Items:</label>
+              <input type="text" class="form-control" id="inputRentedItems" placeholder="Rented Items">
+            </div> -->
+            <div class="form-group">
+              <label for="inputTotal">Available Items:</label>
+              <input type="text" class="form-control" id="inputTotal" placeholder="Total Items" disabled>
+            </div>
+            <div class="form-group">
+              <label for="inputDescription">Item Description:</label>
+              <input type="text" class="form-control" id="inputDescription" placeholder="Item Description" disabled>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!--Sign Modal -->
   <div class="modal fade" id="signDialog" tabindex="-1" aria-labelledby="Sign rental dialog" aria-hidden="true">
