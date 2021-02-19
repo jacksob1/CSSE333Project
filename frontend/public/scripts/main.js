@@ -228,8 +228,8 @@ function createClubMember(uid, name) {
     });
 }
 
-function createNewMember(uid, name) {
-    fetch(apiURLClubMemberAdd + uid + "&" + name, {
+async function createNewMember(uid, name) {
+    await fetch(apiURLClubMemberAdd + uid + "&" + name, {
         method: "POST"
     }).then(
         response => response.json()
@@ -249,11 +249,11 @@ function massLoad(){
         let items = data.Items;
 
         for(let i=0; i<categories.length; i++){
-            addCategory(categories[i].name);
+            await addCategory(categories[i].name);
         }
 
         for(let i = 0; i<clubMembers.length; i++){
-            createNewMember(clubMembers[i].memberID, clubMembers[i].name)
+            await createNewMember(clubMembers[i].memberID, clubMembers[i].name)
         }
 
         for(let i = 0; i<executives.length; i++){
@@ -261,7 +261,7 @@ function massLoad(){
         }
 
         for(let i=0; i < items.length; i++){
-            await addItem(items[i].name, items[i].category, items[i].price, items[i].description, items[i].quantity, items[i].manager);
+            await addItem(items[i].name, items[i].category, items[i].price, items[i].description, items[i].quantity, items[i].manager, 1);
         }
     })
 }
@@ -305,8 +305,8 @@ function loadExecutives() {
     });
 }
 
-function addCategory(name) {
-    fetch(apiURLAddCategory + name, {
+async function addCategory(name) {
+    await fetch(apiURLAddCategory + name, {
         method: "POST"
     }).then(
         response => response.json()
@@ -335,8 +335,8 @@ function getModalValues(isAdd, id) {
     });
 }
 
-async function addItem(name, category, price, description, quantity, id){
-    fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${id}`, {
+async function addItem(name, category, price, description, quantity, memberid, id){
+    await fetch(`${apiURLAdd}${name}&${category}&${price}&${description}&${quantity}&${memberid}&${id}`, {
         method: "POST"
     }).then(
         response => response.json()
