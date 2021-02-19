@@ -210,7 +210,7 @@ function main() {
                     }
                 }
             }
-            loadEntries("", true);
+            loadEntries("", true, true);
         }
     }
     let isManagement = false;
